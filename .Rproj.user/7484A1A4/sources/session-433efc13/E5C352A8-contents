@@ -11,7 +11,7 @@ Authors@R: c(
   )
 Description: More about what it does (maybe more than one line).
     Continuation lines should be indented.
-Imports: quantreg, combinat, Matrix 
+Imports: quantreg, combinat, Matrix, MASS 
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
