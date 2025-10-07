@@ -1,0 +1,512 @@
+n=100
+tau=c(0.1,0.25,0.5,0.75,0.9)
+test=2
+corxz=0
+meanxz=c(1,0)
+varxz=c(2.5,1)
+yformula="rnorm(n,0.3*x,1)"
+X<-mvrnorm(n,c(meanxz[1],meanxz[2]),matrix(c(varxz[1],corxz,corxz,varxz[2]),2,2))
+x<-X[,1]
+z<-X[,2]
+y<-eval(parse(text=yformula))
+taus <- c(0.1,0.25,0.5,0.75,0.9)
+z1 = rnorm(100)
+mod <- rq(y ~ x + z + z1, tau = taus)
+X = "x"
+source("R/estimateCovariance.R")
+source("R/waldTest.R")
+source("R/rankTest.R")
+source("R/closedTesting.R")
+res <- estimateCovariance(mod = mod, X = "x", test = "wald",h = NULL)
+res <- estimateCovariance(mod = mod, X = "x", test = "rank")
+res <- waldTest(mod = mod,  X = "x")
+closedTesting(res, quantiles = 0.9)
+res <- rankTest(mod = mod, X = "x")
+library(MASS)
+library(quantreg)
+rm(list =ls())
+nsim=1000
+n=100
+tau=c(0.1,0.25,0.5,0.75,0.9)
+test=2
+corxz=0
+meanxz=c(1,0)
+varxz=c(2.5,1)
+yformula="rnorm(n,0.3*x,1)"
+X<-mvrnorm(n,c(meanxz[1],meanxz[2]),matrix(c(varxz[1],corxz,corxz,varxz[2]),2,2))
+x<-X[,1]
+z<-X[,2]
+y<-eval(parse(text=yformula))
+taus <- c(0.1,0.25,0.5,0.75,0.9)
+z1 = rnorm(100)
+mod <- rq(y ~ x + z + z1, tau = taus)
+X = "x"
+source("R/estimateCovariance.R")
+source("R/waldTest.R")
+source("R/rankTest.R")
+source("R/closedTesting.R")
+res <- estimateCovariance(mod = mod, X = "x", test = "wald",h = NULL)
+res <- estimateCovariance(mod = mod, X = "x", test = "rank")
+res <- waldTest(mod = mod,  X = "x")
+closedTesting(res, quantiles = 0.9)
+res <- rankTest(mod = mod, X = "x")
+library(MASS)
+library(quantreg)
+rm(list =ls())
+nsim=1000
+n=100
+tau=c(0.1,0.25,0.5,0.75,0.9)
+test=2
+corxz=0
+meanxz=c(1,0)
+varxz=c(2.5,1)
+yformula="rnorm(n,0.3*x,1)"
+X<-mvrnorm(n,c(meanxz[1],meanxz[2]),matrix(c(varxz[1],corxz,corxz,varxz[2]),2,2))
+x<-X[,1]
+z<-X[,2]
+y<-eval(parse(text=yformula))
+taus <- c(0.1,0.25,0.5,0.75,0.9)
+z1 = rnorm(100)
+mod <- rq(y ~ x + z + z1, tau = taus)
+X = "x"
+source("R/estimateCovariance.R")
+source("R/waldTest.R")
+source("R/rankTest.R")
+source("R/closedTesting.R")
+res <- estimateCovariance(mod = mod, X = "x", test = "wald",h = NULL)
+res <- estimateCovariance(mod = mod, X = "x", test = "rank")
+res <- waldTest(mod = mod,  X = "x")
+closedTesting(res, quantiles = 0.9)
+res <- rankTest(mod = mod, X = "x")
+library(MASS)
+library(quantreg)
+rm(list =ls())
+nsim=1000
+n=100
+tau=c(0.1,0.25,0.5,0.75,0.9)
+test=2
+corxz=0
+meanxz=c(1,0)
+varxz=c(2.5,1)
+yformula="rnorm(n,0.3*x,1)"
+X<-mvrnorm(n,c(meanxz[1],meanxz[2]),matrix(c(varxz[1],corxz,corxz,varxz[2]),2,2))
+x<-X[,1]
+z<-X[,2]
+y<-eval(parse(text=yformula))
+taus <- c(0.1,0.25,0.5,0.75,0.9)
+z1 = rnorm(100)
+mod <- rq(y ~ x + z + z1, tau = taus)
+X = "x"
+source("R/estimateCovariance.R")
+source("R/waldTest.R")
+source("R/rankTest.R")
+source("R/closedTesting.R")
+res <- estimateCovariance(mod = mod, X = "x", test = "wald",h = NULL)
+res <- estimateCovariance(mod = mod, X = "x", test = "rank")
+res <- waldTest(mod = mod,  X = "x")
+closedTesting(res, quantiles = 0.9)
+res <- rankTest(mod = mod, X = "x")
+library(MASS)
+library(quantreg)
+rm(list =ls())
+nsim=1000
+n=100
+tau=c(0.1,0.25,0.5,0.75,0.9)
+test=2
+corxz=0
+meanxz=c(1,0)
+varxz=c(2.5,1)
+yformula="rnorm(n,0.3*x,1)"
+X<-mvrnorm(n,c(meanxz[1],meanxz[2]),matrix(c(varxz[1],corxz,corxz,varxz[2]),2,2))
+x<-X[,1]
+z<-X[,2]
+y<-eval(parse(text=yformula))
+taus <- c(0.1,0.25,0.5,0.75,0.9)
+z1 = rnorm(100)
+mod <- rq(y ~ x + z + z1, tau = taus)
+X = "x"
+source("R/estimateCovariance.R")
+source("R/waldTest.R")
+source("R/rankTest.R")
+source("R/closedTesting.R")
+res <- estimateCovariance(mod = mod, X = "x", test = "wald",h = NULL)
+res <- estimateCovariance(mod = mod, X = "x", test = "rank")
+res <- waldTest(mod = mod,  X = "x")
+closedTesting(res, quantiles = 0.9)
+res <- rankTest(mod = mod, X = "x")
+library(MASS)
+library(quantreg)
+rm(list =ls())
+nsim=1000
+n=100
+tau=c(0.1,0.25,0.5,0.75,0.9)
+test=2
+corxz=0
+meanxz=c(1,0)
+varxz=c(2.5,1)
+yformula="rnorm(n,0.3*x,1)"
+X<-mvrnorm(n,c(meanxz[1],meanxz[2]),matrix(c(varxz[1],corxz,corxz,varxz[2]),2,2))
+x<-X[,1]
+z<-X[,2]
+y<-eval(parse(text=yformula))
+taus <- c(0.1,0.25,0.5,0.75,0.9)
+z1 = rnorm(100)
+mod <- rq(y ~ x + z + z1, tau = taus)
+X = "x"
+source("R/estimateCovariance.R")
+source("R/waldTest.R")
+source("R/rankTest.R")
+source("R/closedTesting.R")
+res <- estimateCovariance(mod = mod, X = "x", test = "wald",h = NULL)
+res <- estimateCovariance(mod = mod, X = "x", test = "rank")
+res <- waldTest(mod = mod,  X = "x")
+closedTesting(res, quantiles = 0.9)
+res <- rankTest(mod = mod, X = "x")
+mod <- rq(y ~ offset(2*x) + z + z1, tau = taus)
+summary(mod)
+mod <- rq(y ~ x + z + z1, tau = taus)
+summary(mod)
+mod <- rq(y ~ x + z + z1, tau = 0.1)
+summary(mod)
+mod <- rq(y ~ offset(3*x) + z + z1, tau = 0.1)
+summary(mod)
+mod <- rq(y ~ offset(3*x) + x + z + z1, tau = 0.1)
+summary(mod)
+mod <- rq(y ~ offset(3*x) + x + z + z1, tau = 0.1)
+summary(mod)
+nsim=1000
+n=100
+tau=c(0.1,0.25,0.5,0.75,0.9)
+test=2
+corxz=0
+meanxz=c(1,0)
+varxz=c(2.5,1)
+yformula="rnorm(n,0.3*x,1)"
+X<-mvrnorm(n,c(meanxz[1],meanxz[2]),matrix(c(varxz[1],corxz,corxz,varxz[2]),2,2))
+library(MASS)
+library(quantreg)
+rm(list =ls())
+nsim=1000
+n=100
+tau=c(0.1,0.25,0.5,0.75,0.9)
+test=2
+corxz=0
+meanxz=c(1,0)
+varxz=c(2.5,1)
+yformula="rnorm(n,0.3*x,1)"
+X<-mvrnorm(n,c(meanxz[1],meanxz[2]),matrix(c(varxz[1],corxz,corxz,varxz[2]),2,2))
+x<-X[,1]
+z<-X[,2]
+y<-eval(parse(text=yformula))
+taus <- c(0.1,0.25,0.5,0.75,0.9)
+z1 = rnorm(100)
+mod <- rq(y ~ offset(3*x) + x + z + z1, tau = 0.1)
+summary(mod)
+X = "x"
+source("R/estimateCovariance.R")
+source("R/waldTest.R")
+source("R/rankTest.R")
+source("R/closedTesting.R")
+X = "x"
+taus <- mod$tau
+coefest <- mod$coefficients[rownames(mod$coefficients) %in% X,]
+mod$coefficients
+rownames(mod$coefficients)
+mod$coefficients
+mod
+taus
+names(mod$coefficients)
+coefest <- mod$coefficients[names(mod$coefficients) %in% X,]
+X
+names(mod$coefficients) %in% X
+taus
+coefest <- mod$coefficients[names(mod$coefficients) %in% X]
+coefest
+h = NULL
+vcov <- estimateCovariance(mod = mod, X = X,test = "wald", h = h)
+vcov
+taus
+library(MASS)
+library(quantreg)
+rm(list =ls())
+nsim=1000
+n=100
+tau=c(0.1,0.25,0.5,0.75,0.9)
+test=2
+corxz=0
+meanxz=c(1,0)
+varxz=c(2.5,1)
+yformula="rnorm(n,0.3*x,1)"
+X<-mvrnorm(n,c(meanxz[1],meanxz[2]),matrix(c(varxz[1],corxz,corxz,varxz[2]),2,2))
+x<-X[,1]
+z<-X[,2]
+y<-eval(parse(text=yformula))
+taus <- c(0.1,0.25,0.5,0.75,0.9)
+z1 = rnorm(100)
+mod <- rq(y ~ x + z, tau = tau)
+summary(mod)
+taus <- mod$tau
+taus
+coefest <- mod$coefficients[rownames(mod$coefficients) %in% X,]
+coefest
+mod$coefficients
+rownames(mod$coefficients)
+X
+X = "x"
+coefest <- mod$coefficients[rownames(mod$coefficients) %in% X,]
+coefest
+h = NULL
+vcov <- estimateCovariance(mod = mod, X = X,test = "wald", h = h)
+source("R/estimateCovariance.R")
+vcov <- estimateCovariance(mod = mod, X = X,test = "wald", h = h)
+vcov
+design <- mod$x
+tests<-unlist(lapply(1:length(taus),
+combinat::combn,
+x = taus,
+simplify = FALSE),
+recursive = FALSE)
+pval<-numeric(0)
+tstat <- numeric(0)
+length(tests)
+l = 1
+coefestsub <- as.matrix(coefest[which(taus %in% unlist(tests[l]))])
+coefestsub
+as.matrix(coefest[which(taus %in% unlist(tests[l]))])
+l = 2
+coefestsub <- as.matrix(coefest[which(taus %in% unlist(tests[l]))])
+coefestsub
+l = 5
+coefestsub <- as.matrix(coefest[which(taus %in% unlist(tests[l]))])
+coefestsub
+l = 10
+coefestsub <- as.matrix(coefest[which(taus %in% unlist(tests[l]))])
+coefestsub
+coefestsub - matrix(beta, nrow = nrow(coefestsub))
+beta = 2
+coefestsub - matrix(beta, nrow = nrow(coefestsub))
+coefestsub
+library(MASS)
+library(quantreg)
+rm(list =ls())
+nsim=1000
+n=100
+tau=c(0.1,0.25,0.5,0.75,0.9)
+test=2
+corxz=0
+meanxz=c(1,0)
+varxz=c(2.5,1)
+yformula="rnorm(n,0.3*x,1)"
+X<-mvrnorm(n,c(meanxz[1],meanxz[2]),matrix(c(varxz[1],corxz,corxz,varxz[2]),2,2))
+x<-X[,1]
+z<-X[,2]
+y<-eval(parse(text=yformula))
+taus <- c(0.1,0.25,0.5,0.75,0.9)
+z1 = rnorm(100)
+mod <- rq(y ~ x + z, tau = tau)
+summary(mod)
+X = "x"
+source("R/estimateCovariance.R")
+source("R/waldTest.R")
+source("R/rankTest.R")
+source("R/closedTesting.R")
+res <- estimateCovariance(mod = mod, X = "x", test = "wald",h = NULL)
+res <- estimateCovariance(mod = mod, X = "x", test = "rank")
+res <- waldTest(mod = mod,  X = "x")
+closedTesting(res, quantiles = 0.9)
+closedTesting(res, quantiles = c(0.9,0.2))
+closedTesting(res, quantiles = c(0.9,0.1))
+quantiles = c(0.9,0.1)
+res
+quantiles
+parse_set <- function(s) {
+s <- gsub("[()\\s]", "", as.character(s))
+as.numeric(strsplit(s, ",")[[1]])
+}
+parse_set
+res$set
+parse_set(res$set[1])
+parse_set(res$set[2])
+parse_set(res$set[3])
+parse_set(res$set[4])
+parse_set(res$set[5])
+parse_set(res$set[6])
+length(parse_set(res$set[6]))
+vals <- parse_set(res$set[6])
+quantiles %in% vals
+quantiles
+length(vals) == 1
+has_one <- vapply(res$set, function(s) {
+vals <- parse_set(s)
+length(vals) == 1
+}, logical(1))
+has_one
+idx <- vapply(res$set, function(s) {
+vals <- parse_set(s)
+length(vals) == 1
+}, logical(1))
+res <- res[idx, ]
+res
+max(res$p.value)
+idx <- vapply(res$set, function(s) {
+vals <- parse_set(s)
+all(quantiles %in% vals)
+}, logical(1))
+res <- waldTest(mod = mod,  X = "x")
+res <- res[idx, ]
+res
+idx
+idx
+idx <- vapply(res$set, function(s) {
+vals <- parse_set(s)
+all(quantiles %in% vals)
+}, logical(1))
+res <- res[idx, ]
+res
+res
+res <- waldTest(mod = mod,  X = "x")
+vals <- parse_set(s)
+idx <- vapply(res$set, function(s) {
+vals <- parse_set(s)
+all(quantiles %in% vals)
+}, logical(1))
+idx
+res <- res[idx, ]
+res
+pv <- max(res$p.value)
+pv
+quantiles
+data.frame(p.value.adjusted = max(res$p.value),
+quantiles = quantiles)
+data.frame(p.value.adjusted = max(res$p.value),
+quantiles = paste(quantiles, sep = ","))
+paste(quantiles, sep = ",")
+data.frame(p.value.adjusted = max(res$p.value),
+quantiles = paste(quantiles, collapse = ","))
+data.frame(p.value.adjusted = max(res$p.value),
+quantiles = paste(quantiles, collapse = ", "))
+data.frame(p.value.adjusted = max(res$p.value),
+quantiles.set = paste0("(",quantiles, ")", collapse = ", "))
+data.frame(p.value.adjusted = max(res$p.value),
+quantiles.set = paste0("(",quantiles, ")",collapse = ""))
+data.frame(p.value.adjusted = max(res$p.value),
+quantiles.set = paste("(",quantiles, ")",collapse = ""))
+idx
+paste(quantiles, collapse = ",")
+data.frame(p.value.adjusted = max(res$p.value),
+quantiles.set = paste(quantiles, collapse = ", "))
+vapply(res$set, function(s) {
+vals <- parse_set(s)
+length(vals == 1)
+}, logical(1))
+res$set
+res <- waldTest(mod = mod,  X = "x")
+vapply(res$set, function(s) {
+vals <- parse_set(s)
+length(vals == 1)
+}, logical(1))
+res$set
+idx <- vapply(res$set, function(s) {
+vals <- parse_set(s)
+length(vals) == 1
+}, logical(1))
+idx
+res$set[vapply(res$set, function(s) {
+vals <- parse_set(s)
+length(vals) == 1
+}, logical(1))]
+res <- waldTest(mod = mod,  X = "x")
+out <- data.frame(p.value.adjusted = NA,
+quantiles.set = NA)
+quantiles_single <- res$set[vapply(res$set, function(s) {
+vals <- parse_set(s)
+length(vals) == 1
+}, logical(1))]
+quantiles_single
+for(i in seq(length(quantiles_single))){
+idx <- vapply(res$set, function(s) {
+vals <- parse_set(s)
+all(quantiles %in% vals)
+}, logical(1))
+res_sub <- res[idx, ]
+out[i,] <- c(max(res_sub$p.value),
+quantiles_single[i])
+}
+out
+for(i in seq(length(quantiles_single))){
+idx <- vapply(res$set, function(s) {
+vals <- parse_set(s)
+all(quantiles_single[i] %in% vals)
+}, logical(1))
+res_sub <- res[idx, ]
+out[i,] <- c(max(res_sub$p.value),
+quantiles_single[i])
+}
+out
+str(res)
+res <- waldTest(mod = mod,  X = "x")
+res
+class(mod)
+roxygen2::roxygenize()
+tau=c(0.1,0.25,0.5,0.75,0.9)
+x<-rnorm(100)
+z<-rnorm(100)
+y<-rnorm(100)
+mod <- rq(y ~ x + z, tau = tau)
+res <- waldTest(mod = mod,  X = "x")
+closedTesting(res, quantiles = c(0.1))
+closedTesting(res, quantiles = NULL)
+res
+quantiles = NULL
+!is.null(quantiles)
+out <- data.frame(p.value.adjusted = NA,
+quantiles.set = NA)
+quantiles_single <- res$set[vapply(res$set, function(s) {
+vals <- parse_set(s)
+length(vals) == 1
+}, logical(1))]
+for(i in seq(length(quantiles_single))){
+idx <- vapply(res$set, function(s) {
+vals <- parse_set(s)
+all(quantiles_single[i] %in% vals)
+}, logical(1))
+res_sub <- res[idx, ]
+out[i,] <- c(max(res_sub$p.value),
+quantiles_single[i])
+}
+out
+library(Matrix)
+roxygen2::roxygenize()
+roxygen2::roxygenise()
+roxygen2::roxygenise()
+roxygen2::roxygenise()
+roxygen2::roxygenise()
+roxygen2::roxygenise()
+tau=c(0.1,0.25,0.5,0.75,0.9)
+x<-rnorm(100)
+z<-rnorm(100)
+y<-rnorm(100)
+mod <- rq(y ~ x + z, tau = tau)
+library(quantreg)
+tau=c(0.1,0.25,0.5,0.75,0.9)
+x<-rnorm(100)
+z<-rnorm(100)
+y<-rnorm(100)
+mod <- rq(y ~ x + z, tau = tau)
+res <- waldTest(mod = mod,  X = "x")
+roxygen2::roxygenise()
+roxygen2::roxygenise()
+roxygen2::roxygenise()
+tau=c(0.1,0.25,0.5,0.75,0.9)
+x<-rnorm(100)
+z<-rnorm(100)
+y<-rnorm(100)
+mod <- rq(y ~ x + z, tau = tau)
+library(quantreg)
+mod <- rq(y ~ x + z, tau = tau)
+res <- waldTest(mod = mod,  X = "x")
+closedTesting(res, quantiles = NULL)
+devtools::check()
+roxygen2::roxygenise()
+devtools::check()
+roxygen2::roxygenise()
