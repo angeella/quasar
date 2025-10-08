@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="1024" height="1184" viewBox="0 0 1024 1184" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <clipPath id="clipHex">
+      <path d="M 512.00 32.00 L 996.97 312.00 L 996.97 872.00 L 512.00 1152.00 L 27.03 872.00 L 27.03 312.00 Z"/>
+    </clipPath>
+    <radialGradient id="skyGrad" cx="50%" cy="35%" r="70%">
+      <stop offset="0%" stop-color="#0c2746"/>
+      <stop offset="60%" stop-color="#0a233d"/>
+      <stop offset="100%" stop-color="#071a2d"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="2.0" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <g id="bigStar">
+      <circle cx="0" cy="0" r="3.5" fill="white" />
+      <g stroke="white" stroke-width="2" stroke-linecap="round">
+        <line x1="-22" y1="0" x2="22" y2="0"/>
+        <line x1="0" y1="-22" x2="0" y2="22"/>
+        <line x1="-16" y1="-16" x2="16" y2="16"/>
+        <line x1="-16" y1="16" x2="16" y2="-16"/>
+      </g>
+      <circle cx="0" cy="0" r="10" fill="white" opacity="0.35" filter="url(#glow)"/>
+    </g>
+    <g id="bgStar">
+      <circle cx="0" cy="0" r="1.3" fill="white" opacity="0.95"/>
+      <circle cx="0" cy="0" r="3.2" fill="white" opacity="0.18" filter="url(#glow)"/>
+    </g>
+    <g id="bgStarSmall">
+      <circle cx="0" cy="0" r="0.9" fill="white" opacity="0.85"/>
+      <circle cx="0" cy="0" r="2.5" fill="white" opacity="0.12" filter="url(#glow)"/>
+    </g>
+    <style type="text/css"><![CDATA[
+      .const-line { stroke: #f5f7ff; stroke-width: 3.6; stroke-linecap: round; }
+    ]]></style>
+  </defs>
+
+  <!-- Visible hex border -->
+  <path d="M 512.00 32.00 L 996.97 312.00 L 996.97 872.00 L 512.00 1152.00 L 27.03 872.00 L 27.03 312.00 Z" fill="none" stroke="#0f2c4d" stroke-width="6" />
+
+  <g clip-path="url(#clipHex)">
+    <!-- Starry sky -->
+    <rect x="0" y="0" width="1024" height="1184" fill="url(#skyGrad)"/>
+    <g opacity="0.95">
+      <!-- medium stars dense -->
+      <!-- top band -->
+      <use href="#bgStar" x="90" y="120"/><use href="#bgStar" x="170" y="140"/>
+      <use href="#bgStar" x="250" y="110"/><use href="#bgStar" x="340" y="160"/>
+      <use href="#bgStar" x="430" y="130"/><use href="#bgStar" x="520" y="150"/>
+      <use href="#bgStar" x="610" y="120"/><use href="#bgStar" x="700" y="170"/>
+      <use href="#bgStar" x="790" y="140"/><use href="#bgStar" x="880" y="120"/>
+      <use href="#bgStar" x="960" y="180"/>
+      <!-- upper-middle -->
+      <use href="#bgStar" x="120" y="260"/><use href="#bgStar" x="210" y="280"/>
+      <use href="#bgStar" x="300" y="240"/><use href="#bgStar" x="390" y="300"/>
+      <use href="#bgStar" x="480" y="260"/><use href="#bgStar" x="570" y="300"/>
+      <use href="#bgStar" x="660" y="260"/><use href="#bgStar" x="750" y="300"/>
+      <use href="#bgStar" x="840" y="260"/><use href="#bgStar" x="930" y="300"/>
+      <!-- middle -->
+      <use href="#bgStar" x="100" y="420"/><use href="#bgStar" x="190" y="440"/>
+      <use href="#bgStar" x="280" y="400"/><use href="#bgStar" x="370" y="460"/>
+      <use href="#bgStar" x="460" y="420"/><use href="#bgStar" x="550" y="460"/>
+      <use href="#bgStar" x="640" y="420"/><use href="#bgStar" x="730" y="460"/>
+      <use href="#bgStar" x="820" y="420"/><use href="#bgStar" x="910" y="460"/>
+      <!-- lower-middle -->
+      <use href="#bgStar" x="120" y="580"/><use href="#bgStar" x="210" y="600"/>
+      <use href="#bgStar" x="300" y="560"/><use href="#bgStar" x="390" y="620"/>
+      <use href="#bgStar" x="480" y="580"/><use href="#bgStar" x="570" y="620"/>
+      <use href="#bgStar" x="660" y="580"/><use href="#bgStar" x="750" y="620"/>
+      <use href="#bgStar" x="840" y="580"/><use href="#bgStar" x="930" y="620"/>
+      <!-- bottom band -->
+      <use href="#bgStar" x="90" y="740"/><use href="#bgStar" x="170" y="760"/>
+      <use href="#bgStar" x="250" y="720"/><use href="#bgStar" x="340" y="780"/>
+      <use href="#bgStar" x="430" y="740"/><use href="#bgStar" x="520" y="780"/>
+      <use href="#bgStar" x="610" y="740"/><use href="#bgStar" x="700" y="780"/>
+      <use href="#bgStar" x="790" y="740"/><use href="#bgStar" x="880" y="780"/>
+      <use href="#bgStar" x="960" y="800"/>
+    </g>
+
+    <g opacity="0.9">
+      <!-- small stars rows -->
+      <!-- top -->
+      <use href="#bgStarSmall" x="60" y="90"/><use href="#bgStarSmall" x="130" y="95"/>
+      <use href="#bgStarSmall" x="200" y="80"/><use href="#bgStarSmall" x="270" y="105"/>
+      <use href="#bgStarSmall" x="340" y="90"/><use href="#bgStarSmall" x="410" y="110"/>
+      <use href="#bgStarSmall" x="480" y="95"/><use href="#bgStarSmall" x="550" y="100"/>
+      <use href="#bgStarSmall" x="620" y="85"/><use href="#bgStarSmall" x="690" y="110"/>
+      <use href="#bgStarSmall" x="760" y="90"/><use href="#bgStarSmall" x="830" y="105"/>
+      <use href="#bgStarSmall" x="900" y="90"/><use href="#bgStarSmall" x="970" y="110"/>
+      <!-- upper-middle -->
+      <use href="#bgStarSmall" x="80" y="210"/><use href="#bgStarSmall" x="150" y="230"/>
+      <use href="#bgStarSmall" x="220" y="200"/><use href="#bgStarSmall" x="290" y="240"/>
+      <use href="#bgStarSmall" x="360" y="220"/><use href="#bgStarSmall" x="430" y="240"/>
+      <use href="#bgStarSmall" x="500" y="210"/><use href="#bgStarSmall" x="570" y="240"/>
+      <use href="#bgStarSmall" x="640" y="220"/><use href="#bgStarSmall" x="710" y="240"/>
+      <use href="#bgStarSmall" x="780" y="210"/><use href="#bgStarSmall" x="850" y="240"/>
+      <use href="#bgStarSmall" x="920" y="220"/>
+      <!-- middle -->
+      <use href="#bgStarSmall" x="70" y="360"/><use href="#bgStarSmall" x="140" y="390"/>
+      <use href="#bgStarSmall" x="210" y="360"/><use href="#bgStarSmall" x="280" y="390"/>
+      <use href="#bgStarSmall" x="350" y="360"/><use href="#bgStarSmall" x="420" y="390"/>
+      <use href="#bgStarSmall" x="490" y="360"/><use href="#bgStarSmall" x="560" y="390"/>
+      <use href="#bgStarSmall" x="630" y="360"/><use href="#bgStarSmall" x="700" y="390"/>
+      <use href="#bgStarSmall" x="770" y="360"/><use href="#bgStarSmall" x="840" y="390"/>
+      <use href="#bgStarSmall" x="910" y="360"/><use href="#bgStarSmall" x="980" y="390"/>
+      <!-- lower-middle -->
+      <use href="#bgStarSmall" x="80" y="510"/><use href="#bgStarSmall" x="150" y="540"/>
+      <use href="#bgStarSmall" x="220" y="510"/><use href="#bgStarSmall" x="290" y="540"/>
+      <use href="#bgStarSmall" x="360" y="510"/><use href="#bgStarSmall" x="430" y="540"/>
+      <use href="#bgStarSmall" x="500" y="510"/><use href="#bgStarSmall" x="570" y="540"/>
+      <use href="#bgStarSmall" x="640" y="510"/><use href="#bgStarSmall" x="710" y="540"/>
+      <use href="#bgStarSmall" x="780" y="510"/><use href="#bgStarSmall" x="850" y="540"/>
+      <use href="#bgStarSmall" x="920" y="510"/><use href="#bgStarSmall" x="990" y="540"/>
+      <!-- bottom -->
+      <use href="#bgStarSmall" x="60" y="680"/><use href="#bgStarSmall" x="130" y="710"/>
+      <use href="#bgStarSmall" x="200" y="680"/><use href="#bgStarSmall" x="270" y="710"/>
+      <use href="#bgStarSmall" x="340" y="680"/><use href="#bgStarSmall" x="410" y="710"/>
+      <use href="#bgStarSmall" x="480" y="680"/><use href="#bgStarSmall" x="550" y="710"/>
+      <use href="#bgStarSmall" x="620" y="680"/><use href="#bgStarSmall" x="690" y="710"/>
+      <use href="#bgStarSmall" x="760" y="680"/><use href="#bgStarSmall" x="830" y="710"/>
+      <use href="#bgStarSmall" x="900" y="680"/><use href="#bgStarSmall" x="970" y="710"/>
+    </g>
+
+    <!-- Constellation (no horizontal lines) -->
+    <g id="constellation">
+      <line class="const-line" x1="512" y1="170" x2="260" y2="380"/>
+      <line class="const-line" x1="512" y1="170" x2="512" y2="370"/>
+      <line class="const-line" x1="512" y1="170" x2="764" y2="380"/>
+
+      <line class="const-line" x1="160" y1="650" x2="260" y2="380"/>
+      <line class="const-line" x1="160" y1="650" x2="512" y2="370"/>
+
+      <line class="const-line" x1="512" y1="650" x2="260" y2="380"/>
+      <line class="const-line" x1="512" y1="650" x2="764" y2="380"/>
+
+      <line class="const-line" x1="864" y1="650" x2="512" y2="370"/>
+      <line class="const-line" x1="864" y1="650" x2="764" y2="380"/>
+    </g>
+
+    <!-- Stars -->
+    <g filter="url(#glow)">
+      <use href="#bigStar" x="512" y="170"/>
+      <use href="#bigStar" x="260" y="380"/>
+      <use href="#bigStar" x="512" y="370"/>
+      <use href="#bigStar" x="764" y="380"/>
+      <use href="#bigStar" x="160" y="650"/>
+      <use href="#bigStar" x="512" y="650"/>
+      <use href="#bigStar" x="864" y="650"/>
+    </g>
+  </g>
+
+  <text x="512" y="940" text-anchor="middle" font-family="Inter, Helvetica, Arial, sans-serif"
+        font-size="140" fill="#e8ecf4" letter-spacing="2">quasar</text>
+</svg>
