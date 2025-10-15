@@ -3,10 +3,10 @@
 #' @importFrom quantreg ranks
 
 
-estimateCovariance <- function(mod, X, test = "rank", h = NULL){
+estimateCovariance <- function(mod, X, test = "rank", h = NULL, alpha = 0.05){
 
   taus <- mod$tau
-  density_list <- lapply(taus, function(tau) estimateDensity(mod = mod, tau, X = X, h = h, test = test))
+  density_list <- lapply(taus, function(tau) estimateDensity(mod = mod, tau, X = X, h = h, test = test, alpha = alpha))
 
   if(test == "rank"){
 
@@ -16,7 +16,7 @@ estimateCovariance <- function(mod, X, test = "rank", h = NULL){
     formula <- make_h0_formula(mod = mod, X = X)
     design_h0 <- rq(formula, tau=taus, data = mod$model)$x
 
-    x <- design[,(colnames(design) %in% c(X))]
+    x <- design[,(colnames(mod$model) %in% c(X))]
 
     hatz <-lapply(f_quant_list, function(w) design_h0%*%solve(t(design_h0)%*%diag(w)%*%design_h0)%*%t(design_h0)%*%diag(w)%*%x)
 

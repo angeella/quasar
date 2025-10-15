@@ -4,24 +4,48 @@
 \alias{waldTest}
 \title{Wald-type test for quantile regression}
 \usage{
-waldTest(mod, X, h = NULL, beta = 0)
+waldTest(mod, X, tau = NULL, full = FALSE, h = NULL, beta = 0, alpha = 0.05)
 }
 \arguments{
-\item{mod}{\code{rqs} object from \code{rq} function (\code{quantreg} package) that is the
-quantile models of interest}
+\item{mod}{An object of class \code{"rqs"} returned by
+\code{\link[quantreg]{rq}}, representing the fitted quantile regression models.}
 
-\item{X}{string value that is the covariate of interest}
+\item{X}{A string indicating the covariate of interest.}
 
-\item{h}{bandwidth value, default \code{NULL}}
+\item{tau}{A numeric vector of quantiles of interest used in \code{mod}.
+Default \code{NULL}, i.e., it takes all the quantiles from the \code{mod} object.}
+
+\item{full}{Logical. If \code{TRUE}, the function returns the test statistics
+and corresponding \eqn{p}-values for all intersection hypotheses containing
+\code{tau}. If \code{FALSE} (default), only the results for the single hypotheses
+are returned.}
+
+\item{h}{A numeric value for the bandwidth. Default is \code{NULL}.}
 
 \item{beta}{numeric value that is the value of the parameter of interest under the null hypothesis
 Default 0.}
+
+\item{alpha}{A numeric value used for bandwidth estimation.
+Following Koenker (2005), it is typically set equal to the desired \eqn{\alpha} level.
+The default is 0.05.}
 }
 \value{
-Data.frame containing the quantile set, statistical test and related \eqn{p}-value
+A \code{data.frame} containing:
+\itemize{
+  \item \code{Quantiles.Set}: the quantiles set
+  \item \code{Statistic}: the Wald-type test statistic
+  \item \code{p.value}: the corresponding unadjusted \eqn{p}-value
+}
 }
 \description{
-This function computes the Wald-type test
+Performs the Wald-type test for the covariate of interest specified in
+\code{X}, at the quantiles defined in \code{tau}, using a fitted quantile
+regression model.
+}
+\details{
+This procedure requires that the covariate of interest \code{X} is either numeric
+or, if categorical, has at most two levels. Multilevel categorical covariates
+are not supported and will trigger an error.
 }
 \examples{
 library(quantreg)
@@ -33,7 +57,7 @@ mod <- rq(y ~ x + z, tau = tau)
 waldTest(mod = mod,  X = "x")
 }
 \seealso{
-\code{\link{rankTest}}
+\code{\link[quantreg]{rq}} \code{\link[quasar]{rankTest}}
 }
 \author{
 Angela Andreella

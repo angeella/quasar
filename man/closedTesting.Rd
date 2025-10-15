@@ -2,41 +2,67 @@
 % Please edit documentation in R/closedTesting.R
 \name{closedTesting}
 \alias{closedTesting}
-\title{Closed Testing procedure}
+\title{Closed testing procedure}
 \usage{
-closedTesting(res, quantiles)
+closedTesting(mod, X, tau = NULL, test = "rank-score", ...)
 }
 \arguments{
-\item{res}{data.frame object from \code{\link{waldTest}}, \code{\link{rankTest}}}
+\item{mod}{An object of class \code{"rqs"} returned by
+\code{\link[quantreg]{rq}}, representing the fitted quantile regression models.}
 
-\item{quantiles}{numeric vector that contains the set of quantiles of interest. If \code{NULL}
-all single hypotheses are considered.}
+\item{X}{A string indicating the covariate of interest.}
+
+\item{tau}{A numeric vector of quantiles of interest used in \code{mod}.
+If \code{NULL} (default), all quantiles from the \code{mod} object are considered.}
+
+\item{test}{Character. Type of test to be used. Options are
+\code{"wald"} and \code{"rank-score"}. Default is \code{"rank-score"}.}
+
+\item{...}{additional arguments, see \code{\link[quasar]{waldTest}}, \code{\link[quasar]{rankTest}}}
 }
 \value{
-Data.frame containing the quantile set defined in \code{quantiles} and the related adjusted \eqn{p}-values.
+A \code{data.frame} containing:
+\itemize{
+  \item \code{Quantile}: quantile considered
+  \item \code{Coefficient}: estimated coefficient
+  \item \code{Statistic}: test statistic
+  \item \code{p.value}: raw \eqn{p}-value
+  \item \code{p.value.adjusted}: adjusted \eqn{p}-value from the closed testing procedure
+}
 }
 \description{
-This function applies the closed testing procedure to strong control
-of the FWER to test the effect of a covariate of interest when multiple
-quantile regressions are fitted.
+Applies the closed testing procedure to strongly control the familywise error rate (FWER)
+when testing the effect of a covariate of interest across multiple quantile regression models.
+}
+\details{
+This procedure requires that the covariate of interest \code{X} is either numeric
+or, if categorical, has at most two levels. Multilevel categorical covariates
+are not supported and will trigger an error.
 }
 \examples{
+set.seed(123)
 library(quantreg)
-tau=c(0.1,0.25,0.5,0.75,0.9)
-x<-rnorm(100)
-z<-rnorm(100)
-y<-rnorm(100)
+tau <- c(0.1, 0.25, 0.5, 0.75, 0.9)
+n <- 100
+x <- rnorm(n)
+z <- rnorm(n)
+# signal on x to make the example informative
+y <- 0.5 * x + 0.2 * z + rnorm(n)
 mod <- rq(y ~ x + z, tau = tau)
-res <- waldTest(mod = mod,  X = "x")
-closedTesting(res, quantiles = c(0.1))
+closedTesting(mod, X = "x")                     # default rank-score
+closedTesting(mod, X = "x", test = "wald")      # Wald version
 }
 \references{
-Marcus, R., Eric, P., & Gabriel, K. R. (1976). On closed testing procedures with special reference to ordered analysis of variance. Biometrika, 63(3), 655-660.
+Marcus, R., Eric, P., & Gabriel, K. R. (1976).
+On closed testing procedures with special reference to ordered analysis of variance.
+\emph{Biometrika}, 63(3), 655--660.
 
-Goeman, J. J., Hemerik, J., & Solari, A. (2021). Only closed testing procedures are admissible for controlling false discovery proportions. The Annals of Statistics, 49(2), 1218-1238.
+Goeman, J. J., Hemerik, J., & Solari, A. (2021).
+Only closed testing procedures are admissible for controlling false discovery proportions.
+\emph{The Annals of Statistics}, 49(2), 1218--1238.
 }
 \seealso{
-\code{\link{waldTest}}, \code{\link{rankTest}}
+\code{\link[quasar]{waldTest}}, \code{\link[quasar]{rankTest}}, \code{\link[quantreg]{rq}}
 }
 \author{
 Angela Andreella

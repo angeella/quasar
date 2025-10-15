@@ -3,11 +3,11 @@
 #' @importFrom quantreg rq.fit
 
 
-estimateDensity <- function(mod, tau, X, test = "rank", h = NULL){
+estimateDensity <- function(mod, tau, X, test = "rank", h = NULL, alpha = 0.05){
 
   if(test == "rank"){
-     formula <- make_h0_formula(mod, X = X)
-     mod<-rq(formula, tau=tau, data = mod$model)
+     formula <- make_h0_formula(mod = mod, X = X)
+     mod<-rq(formula = formula, tau=tau, data = mod$model)
   }
 
 
@@ -20,10 +20,10 @@ estimateDensity <- function(mod, tau, X, test = "rank", h = NULL){
 
   pz <- sum(abs(resid) < eps)
   if(is.null(h) | identical(h, "Hall-Sheather")){
-    h <- bandwidth.rq(tau, n, hs = TRUE)
+    h <- bandwidth.rq(p = tau, n = n, hs = TRUE, alpha = alpha)
   }
   if(identical(h, "Bofinger")){
-    h <- bandwidth.rq(tau, n, hs = FALSE)
+    h <- bandwidth.rq(p = tau, n = n, hs = FALSE, alpha = alpha)
   }
 
   while ((tau - h < 0) || (tau + h > 1)) h <- h/2

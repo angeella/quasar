@@ -2,28 +2,51 @@
 % Please edit documentation in R/simulateData.R
 \name{simulateData}
 \alias{simulateData}
-\title{simulate data}
+\title{Simulate data}
 \usage{
-simulateData(n, beta, gamma, mu, Sigma, sigma.y)
+simulateData(n, beta, gamma, mu, Sigma, sigma.y,
+  distribution = "normal", df = 5)
 }
 \arguments{
-\item{n}{number of observations}
+\item{n}{Integer. Number of observations.}
 
-\item{beta}{value of the parameter of interest}
+\item{beta}{Numeric scalar. Effect of \code{X}.}
 
-\item{gamma}{vector of values of the nuisance parameters}
+\item{gamma}{Numeric vector. Effects for \code{Z} (length \code{p - 1}, where \code{p = ncol(Sigma)}).}
 
-\item{mu}{vector of means for covariates}
+\item{mu}{Numeric scalar. Intercept.}
 
-\item{Sigma}{covariance matrix for covariates}
+\item{Sigma}{Numeric \code{p x p} symmetric positive-definite covariance matrix for \code{(X, Z)}.
+The first column corresponds to \code{X}, the remaining columns are \code{Z1, Z2, ...}.}
 
-\item{sigma.y}{vector of standard deviations for the response variable}
+\item{sigma.y}{Either a numeric scalar or a one-sided expression/string (e.g., \code{"0.3*abs(X)+0.1"})
+defining the scale of \code{y}.}
+
+\item{distribution}{Character. One of \code{"normal"}, \code{"exponential"}, or \code{"t"}.
+This is the distribution of \code{y}.}
+
+\item{df}{Numeric scalar > 0. Degrees of freedom for t-distribution.}
 }
 \value{
-matrix
+A \code{data.frame} with columns \code{y}, \code{X}, and \code{Z1, ..., Zk}.
 }
 \description{
-This function simulate data
+Simulates covariates \code{(X, Z)} and a response \code{y} drawn from
+the chosen distribution
+}
+\examples{
+set.seed(1)
+p <- 3; Sigma <- diag(p)
+# Normal
+dat_n <- simulateData(200, beta=0.5, gamma=c(0.2,-0.1), mu=0,
+                      Sigma=Sigma, sigma.y=0.5, distribution="normal")
+# Exponential
+dat_e <- simulateData(200, beta=0.5, gamma=c(0.2,-0.1), mu=0,
+                      Sigma=Sigma, sigma.y="0.3*abs(X)+0.1", distribution="exponential")
+# Student-t
+dat_t0 <- simulateData(200, beta=0.5, gamma=c(0.2,-0.1), mu=0,
+                       Sigma=Sigma, sigma.y=0.5, distribution="t", df=7)
+
 }
 \author{
 Angela Andreella
