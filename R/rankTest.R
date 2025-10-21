@@ -59,7 +59,8 @@ rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05){
   }
 
   if(sum(!(tau %in% mod$tau))!=0){
-    stop("Some quantiles specified are not the ones used in the quantile regression. Please specify a vector of proper quantiles.")
+    stop("Some quantiles specified are not the ones used in the quantile regression.
+         Please specify a vector of proper quantiles.")
   }
 
   res <- estimateCovariance(mod = mod, X = X, test = "rank", h = h, alpha = alpha)

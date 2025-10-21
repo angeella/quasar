@@ -32,7 +32,7 @@ estimateDensity <- function(mod, tau, X, test = "rank", h = NULL, alpha = 0.05){
   blo <- rq.fit(design, y, tau = tau - h)$coef
   dyhat <- design %*% (bhi - blo)
 
-  f_quant_tau <- pmax(0.1, (2 * h)/(dyhat - eps))
+  f_quant_tau <- pmax(eps, (2 * h)/(dyhat - eps))
 
 
     return(f_quant_tau)
