@@ -6,7 +6,8 @@
 
 # Toy example 
 
-`remotes::install_github("angeella/quasar")
+`remotes::install_github("angeella/quasar")`
+
 `library(quasar)`
 
 `p <- 3; Sigma <- diag(p)`
