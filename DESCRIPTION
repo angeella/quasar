@@ -11,7 +11,7 @@ Authors@R: c(
   )
 Description: The approach is based on the closed testing procedure to control FWER in a strong sense.
   The local tests implemented are Wald-type and rank-score.  
-Imports: quantreg, combinat, Matrix, MASS 
+Imports: quantreg, Matrix, MASS 
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

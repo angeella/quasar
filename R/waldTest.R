@@ -21,7 +21,6 @@
 #' @param alpha A numeric value used for bandwidth estimation.
 #' Following Koenker (2005), it is typically set equal to the desired \eqn{\alpha} level.
 #' The default is 0.05.
-#' @importFrom combinat combn
 #' @importFrom stats pchisq
 #' @author Angela Andreella
 #'

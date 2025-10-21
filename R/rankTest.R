@@ -35,7 +35,6 @@
 #' or, if categorical, has at most two levels. Multilevel categorical covariates
 #' are not supported and will trigger an error.
 #'
-#' @importFrom combinat combn
 #' @importFrom stats pchisq
 #' @seealso \code{\link[quantreg]{rq}} \code{\link[quasar]{waldTest}}
 #' @export
