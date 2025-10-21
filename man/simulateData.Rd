@@ -5,7 +5,7 @@
 \title{Simulate data}
 \usage{
 simulateData(n, beta, gamma, mu, Sigma, sigma.y,
-  distribution = "normal", df = 5)
+  distribution = "normal", df = 5, seed = 1234)
 }
 \arguments{
 \item{n}{Integer. Number of observations.}
@@ -26,6 +26,8 @@ defining the scale of \code{y}.}
 This is the distribution of \code{y}.}
 
 \item{df}{Numeric scalar > 0. Degrees of freedom for t-distribution.}
+
+\item{seed}{Numeric scalar > 0. Seed for random number generator}
 }
 \value{
 A \code{data.frame} with columns \code{y}, \code{X}, and \code{Z1, ..., Zk}.

@@ -1,6 +1,6 @@
 Package: quasar
 Type: Package
-Title: What the Package Does (Title Case)
+Title: This package provides valid inference on testing effects when multiple quantile regressions are fitted
 Version: 0.1.0
 Authors@R: c(
     person(
@@ -9,8 +9,8 @@ Authors@R: c(
       role = c("aut", "cre")
     )
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
+Description: The approach is based on the closed testing procedure to control FWER in a strong sense.
+  The local tests implemented are Wald-type and rank-score.  
 Imports: quantreg, combinat, Matrix, MASS 
 License: GPL (>= 3)
 Encoding: UTF-8
