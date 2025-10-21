@@ -63,7 +63,7 @@ simulateData <- function(n, beta, gamma, mu, Sigma, sigma.y,
   if (distribution == "exponential") {
     eta_clip <- pmin(pmax(eta, -30), 30)
     rate <- 1 / (exp(eta_clip) * sigma)
-    y <- rexp(n, rate = rate)
+    y <- rexp(n, rate = rate) - 1/rate
   }
 
   if (distribution == "t") {
