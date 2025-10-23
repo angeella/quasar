@@ -1,4 +1,4 @@
-#' @title Closed testing procedure
+#' @title Closed testing for quantile regression
 #'
 #' @description
 #' Applies the closed testing procedure to strongly control the familywise error rate (FWER)
@@ -6,18 +6,18 @@
 #'
 #' @usage closedTesting(mod, X, tau = NULL, test = "rank-score", ...)
 #'
-#' @param mod An object of class \code{"rqs"} returned by
+#' @param mod An object of class \code{rqs} returned by
 #'   \code{\link[quantreg]{rq}}, representing the fitted quantile regression models.
-#' @param tau A numeric vector of quantiles of interest used in \code{mod}.
-#'   If \code{NULL} (default), all quantiles from the \code{mod} object are considered.
 #' @param X A string indicating the covariate of interest.
+#' @param tau A numeric vector of quantiles of interest used in \code{mod}.
+#' If \code{NULL} (default), all quantiles from the \code{mod} object are considered.
 #' @param test Character. Type of test to be used. Options are
-#'   \code{"wald"} and \code{"rank-score"}. Default is \code{"rank-score"}.
-#' @param ... additional arguments, see \code{\link[quasar]{waldTest}}, \code{\link[quasar]{rankTest}}
+#' \code{"rank-score"} and \code{"wald"}.
+#' @param ... Additional arguments, see \code{\link[quasar]{rankTest}}, \code{\link[quasar]{waldTest}}.
 #' @return
-#' A \code{data.frame} containing:
+#' An object of class \code{quasar} containing:
 #' \itemize{
-#'   \item \code{Quantile}: quantile considered
+#'   \item \code{Quantile}: quantile level
 #'   \item \code{Coefficient}: estimated coefficient
 #'   \item \code{Statistic}: test statistic
 #'   \item \code{p.value}: raw \eqn{p}-value
@@ -25,7 +25,7 @@
 #' }
 #'
 #' @seealso
-#' \code{\link[quasar]{waldTest}}, \code{\link[quasar]{rankTest}}, \code{\link[quantreg]{rq}}
+#' \code{\link[quantreg]{rq}}, \code{\link[quasar]{rankTest}}, \code{\link[quasar]{waldTest}}
 #'
 #' @references
 #' Marcus, R., Eric, P., & Gabriel, K. R. (1976).
@@ -46,81 +46,75 @@
 #' @export
 #'
 #' @examples
-#' set.seed(123)
-#' library(quantreg)
+#' # Simulate data
+#' set.seed(1234)
+#' D <- simulateData(n = 100, gamma = 0.5, sigma.y = "1 + 2 * pmax(X, 0)")
+#'
+#' # Quantile regressions at different levels
 #' tau <- c(0.1, 0.25, 0.5, 0.75, 0.9)
-#' n <- 100
-#' x <- rnorm(n)
-#' z <- rnorm(n)
-#' # signal on x to make the example informative
-#' y <- 0.5 * x + 0.2 * z + rnorm(n)
-#' mod <- rq(y ~ x + z, tau = tau)
-#' closedTesting(mod, X = "x")                     # default rank-score
-#' closedTesting(mod, X = "x", test = "wald")      # Wald version
+#' mod <- quantreg::rq(y ~ X + Z1, tau = tau, data=D)
+#'
+#' # Closed testing
+#' res <- closedTesting(mod, X = "X")
+#' res
+#'
+#' # Summary and plot
+#' summary(res, alpha = 0.1)
+#' plot(res, alpha = 0.1, legend.position = "bottomright")
 
 closedTesting <- function(mod, X, tau = NULL, test = "rank-score", ...){
 
-  if(is.null(tau)){
-    tau <- mod$tau
-  }
+  if (!inherits(mod, "rqs")) stop("mod must be an object of class rqs, typically returned by quantreg::rq().")
 
-  if(sum(!(tau %in% mod$tau))!=0){
-    stop("The quantiles specified are not the ones used in the quantile regression. Please specify a vector of proper quantiles.")
-  }
+  if(is.null(tau)) tau <- mod$tau
+  if (any(!tau %in% mod$tau)) stop("All values in tau must be among the quantiles used in mod.")
 
+  test <- match.arg(test, c("rank-score", "wald"))
 
   parse_set <- function(s) {
     s <- gsub("[()\\s]", "", as.character(s))
     as.numeric(strsplit(s, ",")[[1]])
   }
 
-  if(test == "rank-score"){
+  if (test == "rank-score") {
     res <- rankTest(mod = mod, X = X, tau = mod$tau, full = TRUE, ...)
-  }
-  if(test == "wald"){
+  } else {
     res <- waldTest(mod = mod, X = X, tau = mod$tau, full = TRUE, ...)
   }
 
-    out <- data.frame(p.value.adjusted = NA,
-                      quantiles.set = NA)
+  out <- data.frame(p.value.adjusted = NA,
+                    quantiles.set = NA)
 
-    quantiles_single <- as.character(mod$tau)
+  quantiles_single <- as.character(mod$tau)
 
-    for(i in seq(length(quantiles_single))){
+  for(i in seq(length(quantiles_single))){
+    idx <- vapply(res$Quantiles.Set, function(s) {
+      vals <- parse_set(s)
+      all(quantiles_single[i] %in% vals)
+    }, logical(1))
 
-      idx <- vapply(res$Quantiles.Set, function(s) {
-        vals <- parse_set(s)
-        all(quantiles_single[i] %in% vals)
-      }, logical(1))
-
-      res_sub <- res[idx, ]
-
-      out[i,] <- c(max(res_sub$p.value),
-                   quantiles_single[i])
-
-
+    res_sub <- res[idx, ]
+    out[i,] <- c(max(res_sub$p.value),
+                 quantiles_single[i])
   }
 
   if(length(mod$tau)==1){
     out <- data.frame(Quantile = out$quantiles.set,
-                      Coefficients = mod$coefficients[names(mod$model) == X],
+                      Coefficient = mod$coefficients[names(mod$model) == X],
                       Statistic = res$Statistic[1:length(mod$tau)],
                       p.value = round(res$p.value[1:length(mod$tau)],7),
                       p.value.adjusted = round(as.numeric(out$p.value.adjusted),7))
-
   }else{
     out <- data.frame(Quantile = out$quantiles.set,
-                      Coefficients = mod$coefficients[names(mod$model) == X,],
+                      Coefficient = mod$coefficients[names(mod$model) == X,],
                       Statistic = res$Statistic[1:length(mod$tau)],
                       p.value = round(res$p.value[1:length(mod$tau)],7),
                       p.value.adjusted = round(as.numeric(out$p.value.adjusted),7))
 
     rownames(out) <- NULL
-
-
     out <- subset(out, out$Quantile %in% tau)
   }
 
-
+  class(out) <- c("quasar", class(out))
   return(out)
 }

@@ -12,42 +12,54 @@ simulateData(n, beta, gamma, mu, Sigma, sigma.y,
 
 \item{beta}{Numeric scalar. Effect of \code{X}.}
 
-\item{gamma}{Numeric vector. Effects for \code{Z} (length \code{p - 1}, where \code{p = ncol(Sigma)}).}
+\item{gamma}{Numeric vector. Effects of \code{Z} (length \code{p - 1}, where \code{p = ncol(Sigma)}).}
 
 \item{mu}{Numeric scalar. Intercept.}
 
 \item{Sigma}{Numeric \code{p x p} symmetric positive-definite covariance matrix for \code{(X, Z)}.
-The first column corresponds to \code{X}, the remaining columns are \code{Z1, Z2, ...}.}
+The first column corresponds to \code{X}, the remaining columns to \code{Z1, Z2, ...}.}
 
-\item{sigma.y}{Either a numeric scalar or a one-sided expression/string (e.g., \code{"0.3*abs(X)+0.1"})
+\item{sigma.y}{Either a numeric scalar or a one-sided expression/string (e.g., \code{"0.3 * abs(X) + 0.1"})
 defining the scale of \code{y}.}
 
-\item{distribution}{Character. One of \code{"normal"}, \code{"exponential"}, or \code{"t"}.
+\item{distribution}{Character. One of \code{"normal"}, \code{"t"}, or \code{"exponential"}.
 This is the distribution of \code{y}.}
 
 \item{df}{Numeric scalar > 0. Degrees of freedom for t-distribution.}
 
-\item{seed}{Numeric scalar > 0. Seed for random number generator}
+\item{seed}{Numeric scalar > 0. Seed for random number generator.}
 }
 \value{
 A \code{data.frame} with columns \code{y}, \code{X}, and \code{Z1, ..., Zk}.
 }
 \description{
-Simulates covariates \code{(X, Z)} and a response \code{y} drawn from
-the chosen distribution
+Simulates a main covariate \code{X},
+a vector of additional covariates \code{Z}, and a response \code{y} drawn from
+the chosen distribution.
+}
+\details{
+The response is generated as \code{y = mu + beta * X + Z \%*\% gamma + error}.
+The error term can be drawn from a normal distribution, scaled Student-t with \code{df} degrees of freedom,
+or a shifted exponential. Its standard deviation is defined by \code{sigma.y}:
+if numeric, a fixed scale is used; if a character expression,
+the scale can vary with \code{X} and/or \code{Z}.
 }
 \examples{
 set.seed(1)
-p <- 3; Sigma <- diag(p)
+p <- 3
+Sigma <- diag(p)
+
 # Normal
-dat_n <- simulateData(200, beta=0.5, gamma=c(0.2,-0.1), mu=0,
-                      Sigma=Sigma, sigma.y=0.5, distribution="normal")
-# Exponential
-dat_e <- simulateData(200, beta=0.5, gamma=c(0.2,-0.1), mu=0,
-                      Sigma=Sigma, sigma.y="0.3*abs(X)+0.1", distribution="exponential")
+dat_n <- simulateData(n = 200, beta = 0.5, gamma = c(0.2,-0.1),
+                      sigma.y = 0.5, distribution = "normal")
+
 # Student-t
-dat_t0 <- simulateData(200, beta=0.5, gamma=c(0.2,-0.1), mu=0,
-                       Sigma=Sigma, sigma.y=0.5, distribution="t", df=7)
+dat_t0 <- simulateData(n = 200, beta = 0.5, gamma = c(0.2,-0.1),
+                       sigma.y = 0.5, distribution = "t", df = 7)
+# Exponential
+dat_e <- simulateData(n = 200, beta = 0.5, gamma = c(0.2,-0.1),
+                      sigma.y = "0.3 * abs(X) + 0.1", distribution = "exponential")
+
 
 }
 \author{

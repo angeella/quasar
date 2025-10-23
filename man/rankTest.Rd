@@ -7,37 +7,38 @@
 rankTest(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05)
 }
 \arguments{
-\item{mod}{An object of class \code{"rqs"} returned by
+\item{mod}{An object of class \code{rqs} returned by
 \code{\link[quantreg]{rq}}, representing the fitted quantile regression models.}
 
 \item{X}{A string indicating the covariate of interest.}
 
 \item{tau}{A numeric vector of quantiles of interest used in \code{mod}.
-Default \code{NULL}, i.e., it takes all the quantiles from the \code{mod} object.}
+If \code{NULL} (default), all quantiles from the \code{mod} object are considered.}
 
 \item{full}{Logical. If \code{TRUE}, the function returns the test statistics
 and corresponding \eqn{p}-values for all intersection hypotheses containing
 \code{tau}. If \code{FALSE} (default), only the results for the single hypotheses
 are returned.}
 
-\item{h}{A numeric value for the bandwidth. Default is \code{NULL}.}
+\item{h}{A numeric value for the bandwidth.}
 
 \item{alpha}{A numeric value used for bandwidth estimation.
-Following Koenker (2005), it is typically set equal to the desired \eqn{\alpha} level.
-The default is 0.05.}
+Following Koenker (2005), it is typically set equal to the desired significance level.}
 }
 \value{
 A \code{data.frame} containing:
 \itemize{
-  \item \code{Quantiles.Set}: the quantiles set
-  \item \code{Statistic}: the rank-score test statistic
-  \item \code{p.value}: the corresponding unadjusted \eqn{p}-value
+  \item \code{Quantiles.Set}: quantile levels
+  \item \code{Statistic}: rank-score test statistic
+  \item \code{p.value}: corresponding unadjusted \eqn{p}-value
 }
 }
 \description{
-Performs the rank-score test for the covariate of interest specified in
+Performs the rank-score test for the covariate of interest
 \code{X}, at the quantiles defined in \code{tau}, using a fitted quantile
-regression model.
+regression model. The test evaluates the null hypothesis that the coefficient of \code{X} is equal to zero
+against a two-sided alternative, at each specified quantile level.
+Testing equality to a non-zero value is not yet implemented.
 }
 \details{
 This procedure requires that the covariate of interest \code{X} is either numeric
@@ -45,16 +46,21 @@ or, if categorical, has at most two levels. Multilevel categorical covariates
 are not supported and will trigger an error.
 }
 \examples{
-library(quantreg)
-tau=c(0.1,0.25,0.5,0.75,0.9)
-x<-rnorm(100)
-z<-rnorm(100)
-y<-rnorm(100)
-mod <- rq(y ~ x + z, tau = tau)
-rankTest(mod = mod,  X = "x")
+set.seed(1234)
+D <- simulateData(n = 100, gamma = 0.5, sigma.y = "1 + 2 * pmax(X, 0)")
+
+#Quantile regressions at different levels
+tau <- c(0.1, 0.25, 0.5, 0.75, 0.9)
+mod <- quantreg::rq(y ~ X + Z1, tau = tau, data=D)
+
+# Rank test
+rankTest(mod, X = "X")
+}
+\references{
+Koenker, R. (2005). \emph{Quantile Regression}. Cambridge University Press.
 }
 \seealso{
-\code{\link[quantreg]{rq}} \code{\link[quasar]{waldTest}}
+\code{\link[quantreg]{rq}}, \code{\link[quasar]{waldTest}}
 }
 \author{
 Angela Andreella

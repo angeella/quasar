@@ -2,12 +2,12 @@
 % Please edit documentation in R/closedTesting.R
 \name{closedTesting}
 \alias{closedTesting}
-\title{Closed testing procedure}
+\title{Closed testing for quantile regression}
 \usage{
 closedTesting(mod, X, tau = NULL, test = "rank-score", ...)
 }
 \arguments{
-\item{mod}{An object of class \code{"rqs"} returned by
+\item{mod}{An object of class \code{rqs} returned by
 \code{\link[quantreg]{rq}}, representing the fitted quantile regression models.}
 
 \item{X}{A string indicating the covariate of interest.}
@@ -16,14 +16,14 @@ closedTesting(mod, X, tau = NULL, test = "rank-score", ...)
 If \code{NULL} (default), all quantiles from the \code{mod} object are considered.}
 
 \item{test}{Character. Type of test to be used. Options are
-\code{"wald"} and \code{"rank-score"}. Default is \code{"rank-score"}.}
+\code{"rank-score"} and \code{"wald"}.}
 
-\item{...}{additional arguments, see \code{\link[quasar]{waldTest}}, \code{\link[quasar]{rankTest}}}
+\item{...}{Additional arguments, see \code{\link[quasar]{rankTest}}, \code{\link[quasar]{waldTest}}.}
 }
 \value{
-A \code{data.frame} containing:
+An object of class \code{quasar} containing:
 \itemize{
-  \item \code{Quantile}: quantile considered
+  \item \code{Quantile}: quantile level
   \item \code{Coefficient}: estimated coefficient
   \item \code{Statistic}: test statistic
   \item \code{p.value}: raw \eqn{p}-value
@@ -40,17 +40,21 @@ or, if categorical, has at most two levels. Multilevel categorical covariates
 are not supported and will trigger an error.
 }
 \examples{
-set.seed(123)
-library(quantreg)
+# Simulate data
+set.seed(1234)
+D <- simulateData(n = 100, gamma = 0.5, sigma.y = "1 + 2 * pmax(X, 0)")
+
+# Quantile regressions at different levels
 tau <- c(0.1, 0.25, 0.5, 0.75, 0.9)
-n <- 100
-x <- rnorm(n)
-z <- rnorm(n)
-# signal on x to make the example informative
-y <- 0.5 * x + 0.2 * z + rnorm(n)
-mod <- rq(y ~ x + z, tau = tau)
-closedTesting(mod, X = "x")                     # default rank-score
-closedTesting(mod, X = "x", test = "wald")      # Wald version
+mod <- quantreg::rq(y ~ X + Z1, tau = tau, data=D)
+
+# Closed testing
+res <- closedTesting(mod, X = "X")
+res
+
+# Summary and plot
+summary(res, alpha = 0.1)
+plot(res, alpha = 0.1, legend.position = "bottomright")
 }
 \references{
 Marcus, R., Eric, P., & Gabriel, K. R. (1976).
@@ -62,7 +66,7 @@ Only closed testing procedures are admissible for controlling false discovery pr
 \emph{The Annals of Statistics}, 49(2), 1218--1238.
 }
 \seealso{
-\code{\link[quasar]{waldTest}}, \code{\link[quasar]{rankTest}}, \code{\link[quantreg]{rq}}
+\code{\link[quantreg]{rq}}, \code{\link[quasar]{rankTest}}, \code{\link[quasar]{waldTest}}
 }
 \author{
 Angela Andreella
