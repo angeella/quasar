@@ -2,7 +2,8 @@
 #' @description Simulates a main covariate \code{X},
 #' a vector of additional covariates \code{Z}, and a response \code{y} drawn from
 #' the chosen distribution.
-#' @usage simulateData(n, beta = 0, gamma = 0, mu = 0, Sigma = NULL, sigma.y = 1, distribution = "normal", df = 5, seed = NULL)
+#' @usage simulateData(n, beta = 0, gamma = 0, mu = 0, Sigma = NULL,
+#'              sigma.y = 1, distribution = "normal", df = 5, seed = NULL)
 #' @param n Integer. Number of observations.
 #' @param beta Numeric scalar. Effect of \code{X}.
 #' @param gamma Numeric vector. Effects of \code{Z} (length \code{p - 1}, where \code{p = ncol(Sigma)}).

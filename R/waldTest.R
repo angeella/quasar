@@ -21,6 +21,7 @@
 #' @param alpha A numeric value used for bandwidth estimation.
 #' Following Koenker (2005), it is typically set equal to the desired significance level.
 #' @importFrom stats pchisq
+#' @importFrom utils combn
 #' @author Angela Andreella
 #'
 #' @references

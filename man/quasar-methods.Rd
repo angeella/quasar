@@ -2,20 +2,20 @@
 % Please edit documentation in R/quasar-methods.R
 \name{quasar-methods}
 \alias{quasar-methods}
-\alias{summary.quasar}
 \alias{print.quasar}
+\alias{summary.quasar}
 \title{Print and summary methods for quasar objects}
 \usage{
-\method{summary}{quasar}(x, alpha = 0.05, ...)
-
 \method{print}{quasar}(x, ...)
+
+\method{summary}{quasar}(object, ..., alpha = 0.05)
 }
 \arguments{
-\item{x}{An object of class \code{quasar}.}
-
-\item{alpha}{Significance level.}
+\item{x, object}{An object of class \code{quasar}.}
 
 \item{...}{Additional arguments passed to other methods.}
+
+\item{alpha}{Significance level.}
 }
 \value{
 The input object invisibly.

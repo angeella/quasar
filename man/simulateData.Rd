@@ -4,7 +4,8 @@
 \alias{simulateData}
 \title{Simulate data}
 \usage{
-simulateData(n, beta = 0, gamma = 0, mu = 0, Sigma = NULL, sigma.y = 1, distribution = "normal", df = 5, seed = NULL)
+simulateData(n, beta = 0, gamma = 0, mu = 0, Sigma = NULL,
+             sigma.y = 1, distribution = "normal", df = 5, seed = NULL)
 }
 \arguments{
 \item{n}{Integer. Number of observations.}

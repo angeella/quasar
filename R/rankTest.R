@@ -40,6 +40,7 @@
 #' are not supported and will trigger an error.
 #'
 #' @importFrom stats pchisq
+#' @importFrom utils combn
 #' @seealso \code{\link[quantreg]{rq}}, \code{\link[quasar]{waldTest}}
 #' @export
 #' @examples
