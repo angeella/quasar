@@ -17,7 +17,7 @@ estimateCovariance <- function(mod, X, test = "rank", h = NULL, alpha = 0.05){
     design_h0 <- rq(formula, tau=taus, data = mod$model)$x
 
     #Proviamo con stima sotto H1 (24/10/2025)
-    design_h0 <- mod$x
+  #  design_h0 <- mod$x
 
     x <- design[,(colnames(mod$model) %in% c(X))]
 
