@@ -20,6 +20,9 @@
 #' @param ... Additional graphical parameters passed to \code{plot()}.
 #' @return A base R plot.
 #' @seealso \code{\link{closedTesting}}
+#' @importFrom graphics points
+#' @importFrom graphics abline
+#' @importFrom graphics legend
 #' @export
 plot.quasar <- function(
     x,
@@ -54,7 +57,7 @@ plot.quasar <- function(
   if (show.legend) {
     legend(
       legend.position,
-      legend = c(paste0("p.adj ≤ ", alpha), paste0("p.adj > ", alpha)),
+      legend = c(paste0("p.adj <= ", alpha), paste0("p.adj > ", alpha)),
       col = c(col.sig, col.nonsig),
       pch = c(pch.sig, pch.nonsig),
       bty = "n"
