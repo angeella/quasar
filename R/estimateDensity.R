@@ -6,8 +6,9 @@
 estimateDensity <- function(mod, tau, X, test = "rank", h = NULL, alpha = 0.05){
 
   if(test == "rank"){
-     formula <- make_h0_formula(mod = mod, X = X)
-     mod<-rq(formula = formula, tau=tau, data = mod$model)
+    #Proviamo con stima sotto H1 (24/10/2025) commento queste due righe
+     #formula <- make_h0_formula(mod = mod, X = X)
+     #mod<-rq(formula = formula, tau=tau, data = mod$model)
   }
 
 
