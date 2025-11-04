@@ -2,18 +2,72 @@
 
 # quasar
 
-`quasar` is the package developed to have valid inference when multiple quantile regressions are fitted. 
+**quasar** is an R package that provides valid inference procedures when multiple quantile regressions are fitted simultaneously.  
+It implements the **rank-score–based closed testing** approach proposed in:
 
-# Toy example 
+> **De Santis, F., Vesely, A., and Andreella, A. (2025)**  
+> *Inference on Multiple Quantiles in Regression Models by a Rank-Score Approach.*  
 
-`remotes::install_github("angeella/quasar")`
+## Installation
 
-`library(quasar)`
+To install the development version from GitHub:
 
-`p <- 3; Sigma <- diag(p)`
+```r
+# install.packages("remotes")
+remotes::install_github("angeella/quasar")
+```
 
-`dat_n <- simulateData(200, beta=0, gamma=c(0.2,-0.1), mu=4, Sigma=Sigma, sigma.y=0.5, distribution="t")`
+## Toy Example
 
-`mod <- rq(y ~ X + Z1 + Z2, tau = c(0.1, 0.25, 0.5, 0.75, 0.9), data = dat_n)`
+```r
+library(quasar)
+library(quantreg)
 
-`closedTesting(mod, X = "X")`
+# Set the dimension of the covariates
+p <- 3
+Sigma <- diag(p)
+
+# Simulate data
+dat_n <- simulateData(
+  n            = 200,
+  beta         = 0,
+  gamma        = c(0.2, -0.1),
+  mu           = 4,
+  Sigma        = Sigma,
+  sigma.y      = 0.5,
+  distribution = "t"
+)
+
+# Fit quantile regressions
+mod <- rq(
+  y ~ X + Z1 + Z2,
+  tau  = c(0.1, 0.25, 0.5, 0.75, 0.9),
+  data = dat_n
+)
+
+# Perform closed testing based on rank-score statistics
+closedTesting(mod, X = "X")
+```
+
+## Simulation Code
+
+The `R` scripts used to reproduce the simulation studies (Figures 2 and 3 in the paper)  
+are available in the [`simulations/`](./simulations) folder of this repository.
+
+## Bugs and Feedback
+
+Did you find some bugs?  
+Please write to **angela.andreella[at]unive[dot]it**  
+or open an issue on the [GitHub Issues page](https://github.com/angeella/quasar/issues),  
+preferably including a reproducible example created with the [`reprex`](https://reprex.tidyverse.org/) package.
+
+## License
+
+GPL (≥ 3)
+
+## Citation
+
+If you use **quasar** in your research, please cite:
+
+> De Santis, F., Vesely, A., and Andreella, A. (2025).  
+> *Inference on Multiple Quantiles in Regression Models by a Rank-Score Approach.*  
