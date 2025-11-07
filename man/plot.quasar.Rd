@@ -59,3 +59,6 @@ statistically significant coefficients based on adjusted p-values.
 \seealso{
 \code{\link{closedTesting}}
 }
+\author{
+Anna Vesely
+}

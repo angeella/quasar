@@ -7,11 +7,11 @@ Authors@R: c(
       "Angela", "Andreella",
       email = "angela.andreella@unive.it",
       role = c("aut", "cre")
-    )
+    ), person("Anna", "Vesely", role = "ctb")
   )
 Description: The approach is based on the closed testing procedure to control FWER in a strong sense.
   The local tests implemented are Wald-type and rank-score.  
-Imports: quantreg, Matrix, MASS 
+Depends: quantreg, Matrix, MASS 
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

@@ -23,6 +23,7 @@
 #' @importFrom graphics points
 #' @importFrom graphics abline
 #' @importFrom graphics legend
+#' @author Anna Vesely
 #' @export
 plot.quasar <- function(
     x,

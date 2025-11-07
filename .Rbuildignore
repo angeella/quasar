@@ -1,3 +1,6 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^simulations$
+^CRAN-SUBMISSION$
+^cran-comments\.md$
+^sticker.svg
