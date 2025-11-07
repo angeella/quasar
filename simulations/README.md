@@ -4,7 +4,7 @@ This folder contains the R scripts used to reproduce the simulation studies pres
 **"Inference on Multiple Quantiles in Regression Models by a Rank-Score Approach"**  
 by *De Santis, Vesely, and Andreella*.
 
-All simulations rely on the methods implemented in the [`quasar`](https://github.com/angeella/quasar) R package.
+All simulations rely on the methods implemented in the [`quasar`](https://github.com/angeella/quasar/tree/main/simulations) R package.
 
 ---
 

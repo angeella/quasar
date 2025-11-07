@@ -4,3 +4,4 @@
 ^CRAN-SUBMISSION$
 ^cran-comments\.md$
 ^sticker.svg
+^\.github$
