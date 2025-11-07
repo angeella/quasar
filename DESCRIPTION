@@ -2,6 +2,7 @@ Package: quasar
 Type: Package
 Title: This package provides valid inference on testing effects when multiple quantile regressions are fitted
 Version: 0.1.0
+Date: 2025-11-07
 Authors@R: c(
     person(
       "Angela", "Andreella",
