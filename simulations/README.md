@@ -1,10 +1,10 @@
 # Simulation Studies for *Inference on Multiple Quantiles in Regression Models by a Rank-Score Approach*
 
-This folder contains the R scripts used to reproduce the simulation studies presented in **Section 5** of the paper  
+This folder contains the `R` scripts used to reproduce the simulation studies presented in **Section 5** of the paper  
 **"Inference on Multiple Quantiles in Regression Models by a Rank-Score Approach"**  
 by *De Santis, Vesely, and Andreella*.
 
-All simulations rely on the methods implemented in the [`quasar`](https://github.com/angeella/quasar/tree/main/simulations) R package.
+All simulations rely on the methods implemented in the `quasar` `R` package.
 
 ---
 
@@ -21,6 +21,7 @@ The scripts generate results corresponding to **Figures 2 and 3** in the paper.
 ## Files
 
 ### `error.R`
+
 Simulates data under the **null hypothesis** to assess **Type I error control**.
 
 - Corresponds to **Figure 2 (Section 5)**.  
@@ -56,10 +57,6 @@ Simulates data under the **alternative hypothesis** to analyze **power performan
 
 - **R (≥ 4.0)**
 - Packages:
-  - [`quasar`](https://github.com/angeella/quasar)
-  - [`quantreg`](https://cran.r-project.org/package=quantreg)
+  - `quasar`
+  - `quantreg`
 
-To install `quasar` from GitHub:
-```r
-# install.packages("remotes")
-remotes::install_github("angeella/quasar")
