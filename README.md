@@ -52,7 +52,7 @@ closedTesting(mod, X = "X")
 ## Simulation Code
 
 The `R` scripts used to reproduce the simulation studies (Figures 2 and 3 in the paper)  
-are available in the [`simulations/`](./simulations) folder of this repository.
+are available in the `simulations/`](https://github.com/angeella/quasar/tree/main/simulations) folder of this repository.
 
 ## Bugs and Feedback
 
