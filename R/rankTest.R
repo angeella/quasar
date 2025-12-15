@@ -6,7 +6,8 @@
 #' against a two-sided alternative, at each specified quantile level.
 #' Testing equality to a non-zero value is not yet implemented.
 #'
-#' @usage rankTest(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, eps = 0.001)
+#' @usage rankTest(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05,
+#' eps = c(1e-04,1e-04), A = NULL, error.distr = NULL, error.par = NULL)
 #'
 #' @param mod An object of class \code{rqs} returned by
 #'   \code{\link[quantreg]{rq}}, representing the fitted quantile regression models.
@@ -82,7 +83,7 @@
 #' or, if categorical, has at most two levels. Multilevel categorical covariates
 #' are not supported and will trigger an error.
 #'
-#' @importFrom stats pchisq
+#' @importFrom stats pgamma
 #' @importFrom utils combn
 #' @seealso \code{\link[quantreg]{rq}}, \code{\link[quasar]{waldTest}}
 #' @export
@@ -145,7 +146,7 @@ rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, e
         Al <- diag(A, nrow = k_l, ncol = k_l)
 
       } else if (is.list(A)) {
-        check_dimensions_A(A[[l]], n = k_l)
+        check_dimensions_A(A[[l]], k = k_l)
         Al <- A[[l]]
 
       } else {

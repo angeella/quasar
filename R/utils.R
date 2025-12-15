@@ -102,12 +102,12 @@ check_dimensions_A <- function(A, k) {
 
   # MULTIVARIATE CASE: A must be an k × k matrix
   if (is.matrix(A)) {
-    if (nrow(A) == n && ncol(A) == n) {
+    if (nrow(A) == k && ncol(A) == k) {
       return(invisible(TRUE))
     } else {
       stop(sprintf(
         "A is a matrix but not %dx%d (it is %dx%d). Please insert a correct list of matrices A",
-        n, n, nrow(A), ncol(A)
+        k, k, nrow(A), ncol(A)
       ), call. = FALSE)
     }
   }
@@ -122,7 +122,9 @@ check_dimensions_A <- function(A, k) {
 #' @param error.distr The distribution of the error terms (normal, exponential and t)
 #' @param error.par The related parameters of the specified distribution
 #' @keywords internal
-#'
+#' @importFrom stats qnorm dnorm
+#' @importFrom stats qexp dexp qt dt
+
 .build_A_from_dist <- function(taus, error.distr, error.par) {
   error.distr <- match.arg(error.distr, c("normal", "exponential", "t"))
 
@@ -172,6 +174,9 @@ check_dimensions_A <- function(A, k) {
 #' @param lams eigenvalues
 #' @param x observed stat test
 #' @param eps tolerance vector (one for integrate, one for quadgk)
+#' @importFrom stats integrate
+#' @importFrom pracma quadgk
+#' @importFrom methods is
 .pImhof <- function(lams, x, eps = c(1e-10, 1e-10)) {
   lams <- lams[lams != 0]
 
@@ -197,7 +202,7 @@ check_dimensions_A <- function(A, k) {
   res <- try(integrate(tr.integrand, 0, 1, rel.tol = rt1), silent=TRUE)
 
   if (is(res, "try-error")) {
-    res1 <- try(pracma::quadgk(tr.integrand,0, 1, tol = rt2), silent=TRUE)
+    res1 <- try(quadgk(tr.integrand,0, 1, tol = rt2), silent=TRUE)
     if (is(res1, "try-error")) {
       out <- NA
     } else {

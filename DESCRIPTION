@@ -13,7 +13,7 @@ Authors@R: c(
 Description: The approach is based on the closed testing procedure to control familywise error rate in a strong sense.
   The local tests implemented are Wald-type and rank-score. 
   The method is described in De Santis, et al., (2025), <doi:10.48550/arXiv.2511.07999>.
-Depends: quantreg, Matrix, MASS 
+Depends: quantreg, Matrix, MASS, pracma, methods 
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
