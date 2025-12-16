@@ -149,7 +149,9 @@ rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, e
         check_dimensions_A(A[[l]], k = k_l)
         Al <- A[[l]]
 
-      } else {
+      } else  if (A == "M_sub"){
+        Al <- diag(1/M_sub)
+        }else{
         stop("Argument 'A' has unsupported type.", call. = FALSE)
       }
     }
