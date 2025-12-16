@@ -156,9 +156,10 @@ rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, e
 
     ASigma   <- Al %*% Sigma
     lambdas  <- svd(ASigma)$d
-    tstat[l] <- as.numeric(t(S_sub) %*% S_sub)
+    lambdas <- lambdas[abs(lambdas)>0.001]
+    tstat[l] <- sum(S_sub**2)
 
-    if (nrow(Sigma) == 1) {
+    if (length(lambdas) == 1) {
       pval[l] <- 1 - pgamma(tstat[l], shape = 1/2, scale = 2 * lambdas)
     } else {
       pval[l] <- .pImhof(lams = lambdas, x = tstat[l], eps = eps)

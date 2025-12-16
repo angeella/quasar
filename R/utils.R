@@ -202,17 +202,16 @@ check_dimensions_A <- function(A, k) {
   res <- try(integrate(tr.integrand, 0, 1, rel.tol = rt1), silent=TRUE)
 
   if (is(res, "try-error")) {
-    res1 <- try(quadgk(tr.integrand,0, 1, tol = rt2), silent=TRUE)
-    if (is(res1, "try-error")) {
-      out <- NA
-    } else {
-      out <- res1
-    }
+    res <- try(quadgk(tr.integrand, 0, 1, tol = rt2), silent=TRUE)
   } else {
     out <- res$value
+    return(out)
   }
-
-
-  out
+  if (is(res, "try-error")) {
+    out <- NA
+  } else {
+    out <- res
+  }
+  return(out)
 }
 
