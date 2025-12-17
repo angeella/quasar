@@ -149,17 +149,14 @@ rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, e
         check_dimensions_A(A[[l]], k = k_l)
         Al <- A[[l]]
 
-      } else  if (A == "M_sub"){
-        Al <- diag(1/M_sub)
-        }else{
+      } else{
         stop("Argument 'A' has unsupported type.", call. = FALSE)
       }
     }
-    if(A == "M_sub"){
-      ASigma <- Al
-    }else{
-      ASigma   <- Al %*% Sigma
-    }
+
+
+
+    ASigma   <- Al %*% Sigma
     lambdas  <- svd(ASigma)$d
     lambdas <- lambdas[abs(lambdas)>0.001]
     tstat[l] <- sum(S_sub**2)
