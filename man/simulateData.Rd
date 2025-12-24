@@ -5,7 +5,8 @@
 \title{Simulate data}
 \usage{
 simulateData(n, beta = 0, gamma = 0, mu = 0, Sigma = NULL,
-             sigma.y = 1, distribution = "normal", df = 5, seed = NULL)
+             sigma.y = 1, distribution = "normal", df = 5,
+             xi = 1.453, omega = 2, alpha = 2.2, seed = NULL)
 }
 \arguments{
 \item{n}{Integer. Number of observations.}
@@ -26,6 +27,14 @@ defining the scale of \code{y}.}
 This is the distribution of \code{y}.}
 
 \item{df}{Numeric scalar > 0. Degrees of freedom for t-distribution.}
+
+\item{xi}{Numeric scalar. Location parameter for the skew-normal distribution. In particular, this will be
+\code{mu + beta * X + Z \%*\% gamma} - \code{xi}. Default 1.453.}
+
+\item{omega}{Numeric scalar > 0. Scale parameter for the skew-normal distribution. In particular, this will be
+\code{sigma.y} + \code{omega}. Default 2.}
+
+\item{alpha}{Numeric scalar. Slant parameter for the skew-normal distribution. Default 2.2.}
 
 \item{seed}{Numeric scalar > 0. Seed for random number generator.}
 }

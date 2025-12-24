@@ -3,7 +3,8 @@
 #' a vector of additional covariates \code{Z}, and a response \code{y} drawn from
 #' the chosen distribution.
 #' @usage simulateData(n, beta = 0, gamma = 0, mu = 0, Sigma = NULL,
-#'              sigma.y = 1, distribution = "normal", df = 5, seed = NULL)
+#'              sigma.y = 1, distribution = "normal", df = 5,
+#'              xi = 1.453, omega = 2, alpha = 2.2, seed = NULL)
 #' @param n Integer. Number of observations.
 #' @param beta Numeric scalar. Effect of \code{X}.
 #' @param gamma Numeric vector. Effects of \code{Z} (length \code{p - 1}, where \code{p = ncol(Sigma)}).
@@ -15,6 +16,11 @@
 #' @param distribution Character. One of \code{"normal"}, \code{"t"}, or \code{"skew-normal"}.
 #'   This is the distribution of \code{y}.
 #' @param df Numeric scalar > 0. Degrees of freedom for t-distribution.
+#' @param xi Numeric scalar. Location parameter for the skew-normal distribution. In particular, this will be
+#' \code{mu + beta * X + Z \%*\% gamma} - \code{xi}. Default 1.453.
+#' @param omega Numeric scalar > 0. Scale parameter for the skew-normal distribution. In particular, this will be
+#' \code{sigma.y} + \code{omega}. Default 2.
+#' @param alpha Numeric scalar. Slant parameter for the skew-normal distribution. Default 2.2.
 #' @param seed Numeric scalar > 0. Seed for random number generator.
 #' @author Angela Andreella
 #' @return
@@ -50,7 +56,10 @@
 #' @export
 
 simulateData <- function(n, beta = 0, gamma = 0, mu = 0, Sigma = NULL, sigma.y = 1,
-                         distribution = "normal", df = 5, seed = NULL) {
+                         distribution = "normal", df = 5, xi = 1.453, omega = 2, alpha = 2.2,
+                         seed = NULL) {
+
+
 
   if (!is.numeric(n) || length(n) != 1 || n <= 0) stop("n must be a positive integer.")
   n <- ceiling(n)
@@ -104,7 +113,7 @@ simulateData <- function(n, beta = 0, gamma = 0, mu = 0, Sigma = NULL, sigma.y =
   }
 
   if (distribution == "skew-normal") {
-    y <- rsn(n = n, xi=eta-1.453, omega = sigma+2, alpha=2.2)
+    y <- rsn(n = n, xi=eta-xi, omega = sigma+omega, alpha=alpha)
   }
 
   out <- as.data.frame(cbind(y, XZ))

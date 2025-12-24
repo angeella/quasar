@@ -193,7 +193,7 @@ rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, e
     eigenvals <- Re(eigenvals)
     eigenvals <- eigenvals[abs(eigenvals) > 1e-4]
 
-    if (length(eigen) == 1) {
+    if (length(eigenvals) == 1) {
       pval[l] <- 1 - pgamma(tstat[l], shape = 1/2, scale = 2 * eigenvals)
     } else {
       pval[l] <- .pImhof(lams = eigenvals, x = tstat[l], eps = eps)
