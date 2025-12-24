@@ -151,8 +151,9 @@ rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, e
 
     if (identical(B, "identity")) {
 
-      tstat[l] <- sum(S_sub^2)
+      tstat[l] <- sum(S_sub**2)
       eigenvals <- eigen(M_sub, only.values = TRUE)$values
+      eigenvals <- svd(M_sub)$d
 
     } else if (identical(B, "inverse diagonal")) {
 

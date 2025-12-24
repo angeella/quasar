@@ -194,30 +194,21 @@ build_B_from_dist <- function(taus, error.distr, error.par = list()) {
 #' @importFrom stats integrate
 #' @importFrom pracma quadgk
 #' @importFrom methods is
-.pImhof <- function(lams, x, eps = c(1e-10, 1e-10)) {
+.pImhof <- function(lams, eps = c(1e-04, 1e-04),  x) {
   lams <- lams[lams != 0]
-
-  if (length(lams) == 0) {
-    # degenerate case
-    return(list(value = NA_real_, error = NA_real_))
-  }
-
   integrand <- function(u) {          # the Imhof integrand. Domain: 0...Inf
-    theta <- 0.5 * colSums(atan(outer(lams,u)))  - 0.5 * as.vector(x) * u
+    theta <- 0.5 * colSums(atan(outer(lams,u)))  - 0.5 * x * u
     rho <- exp(colSums(0.25 * log(1 + outer(lams^2,u^2))))
     out <- ifelse(u==0, sum(lams)/2, sin(theta)/(u*rho))
     out
   }
   tr.integrand <- function(v) {       # Transformation of the integrand. Domain: 0...1
     K <- sum(abs(lams))/20            # Scaling constant of the transformation (to make it invariant to the scale of lams)
-
     0.5 + integrand(-log(1-v)/K) / (pi*K*(1-v))
   }
   rt1 <- max(sqrt(.Machine$double.eps), eps[1])
   rt2 <- max(sqrt(.Machine$double.eps), eps[2])
-
   res <- try(integrate(tr.integrand, 0, 1, rel.tol = rt1), silent=TRUE)
-
   if (is(res, "try-error")) {
     res <- try(quadgk(tr.integrand, 0, 1, tol = rt2), silent=TRUE)
   } else {

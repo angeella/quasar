@@ -4,14 +4,14 @@
 \alias{.pImhof}
 \title{The Imhof method for x=0 and central variables only.}
 \usage{
-.pImhof(lams, x, eps = c(1e-10, 1e-10))
+.pImhof(lams, eps = c(1e-04, 1e-04), x)
 }
 \arguments{
 \item{lams}{eigenvalues}
 
-\item{x}{observed stat test}
-
 \item{eps}{tolerance vector (one for integrate, one for quadgk)}
+
+\item{x}{observed stat test}
 }
 \description{
 The Imhof method for x=0 and central variables only.
