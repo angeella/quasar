@@ -7,7 +7,7 @@
 #' Testing equality to a non-zero value is not yet implemented.
 #'
 #' @usage rankTest(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05,
-#' eps = c(1e-04,1e-04), A = NULL, error.distr = NULL, error.par = NULL)
+#' eps = c(1e-04,1e-04), B = "identity", error.distr = NULL, error.par = NULL)
 #'
 #' @param mod An object of class \code{rqs} returned by
 #'   \code{\link[quantreg]{rq}}, representing the fitted quantile regression models.
@@ -23,47 +23,20 @@
 #' Following Koenker (2005), it is typically set equal to the desired significance level.
 #' @param eps 2d vector of relative accuracies requested for approximate the distribution of the test statistic
 #' by Imhof (1961) "Computing the Distribution of Quadratic Forms in Normal Variables"
-#' @param A Optional weighting matrix (or a list of matrices) used in the
-#' computation of the test statistic.
-#'
-#' If \code{NULL} (default), the identity matrix is used for each intersection
-#' hypothesis.
-#'
-#' If a single numeric value is supplied, it is interpreted as a scalar and the
-#' weighting matrix is set to \eqn{A = c I_k}.
-#'
-#' If a list is provided, it must contain one matrix for each tested intersection
-#' hypothesis, and each matrix must be square with dimension equal to the size
-#' of the corresponding quantile subset.
-#'
-#' This argument is ignored when \code{error.distr} is specified.
-#'
-#' @param error.distr A character string specifying the assumed distribution of
-#' the regression errors, used to construct the weighting matrix \eqn{A} based on
-#' the reciprocal of the error density evaluated at the relevant quantile levels.
-#'
-#' Allowed values are:
-#' \itemize{
-#'   \item \code{NULL}: default, no distributional assumption; the argument \code{A} is used instead.
-#'   \item \code{"normal"}: normal errors with parameters specified in \code{error.par}.
-#'   \item \code{"exponential"}: exponential errors with rate/scale specified in \code{error.par}.
-#'   \item \code{"t"}: Student-\eqn{t} errors with degrees of freedom specified in \code{error.par}.
-#' }
-#'
-#' When \code{error.distr} is not \code{NULL}, the argument \code{A} is ignored and the
-#' matrix \eqn{A} is automatically set to a diagonal matrix with entries
-#' \eqn{1 / f(F^{-1}(\tau_j))}, where \eqn{f} is the density of the specified
-#' error distribution and \eqn{F^{-1}} its quantile function.
-#'
-#' @param error.par A named list of parameters associated with the distribution
-#' specified in \code{error.distr}.
-#'
-#' Required elements depend on the chosen distribution:
-#' \itemize{
-#'   \item For \code{"normal"}: \code{mean} (default 0), \code{sd} (default 1).
-#'   \item For \code{"exponential"}: either \code{rate} or \code{scale} (default \code{rate = 1}).
-#'   \item For \code{"t"}: \code{df} (degrees of freedom, required).
-#' }
+#' @param B Weight specification used in the computation of the test statistic.
+#'   One of \code{"identity"} (default), \code{"distribution"}, or \code{"inverse diagonal"}.
+#'   Alternatively, the user can supply a numeric matrix of dimension
+#'   \code{length(mod$tau) x length(mod$tau)}. This argument is ignored when \code{full = TRUE}.
+#' @param error.distr A character string specifying the assumed distribution of the
+#'   regression errors, used only when \code{B = "distribution"}.
+#'   Allowed values are \code{"normal"}, \code{"skew-normal"}, \code{"t"}.
+#' @param error.par A named list of parameters associated with \code{error.distr}.
+#'   Required elements depend on the chosen distribution:
+#'   \itemize{
+#'     \item For \code{"normal"}: \code{mean}, \code{sd}.
+#'     \item For \code{"skew-normal"}: \code{xi}, \code{omega}, \code{alpha}, \code{tau}.
+#'     \item For \code{"t"}: \code{df}.
+#'   }
 #'
 #' @return
 #' A \code{data.frame} containing:
@@ -78,10 +51,17 @@
 #' @references
 #' Koenker, R. (2005). \emph{Quantile Regression}. Cambridge University Press.
 #'
+#' Imhof, J.P. (1961). Computing the Distribution of Quadratic Forms in Normal Variables.
+#' \emph{Biometrika}, 48(3/4), 419--426.
+#'
 #' @details
 #' This procedure requires that the covariate of interest \code{X} is either numeric
 #' or, if categorical, has at most two levels. Multilevel categorical covariates
 #' are not supported and will trigger an error.
+#'
+#' If \code{full = TRUE}, \code{B} is ignored and the identity weight is used.
+#' If \code{B} is user-defined (a matrix), it must be square, symmetric, positive
+#' definite, and numerically invertible.
 #'
 #' @importFrom stats pgamma
 #' @importFrom utils combn
@@ -98,7 +78,7 @@
 #' # Rank test
 #' rankTest(mod, X = "X")
 
-rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, eps = c(1e-04,1e-04), A = NULL, error.distr = NULL, error.par = NULL){
+rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, eps = c(1e-04,1e-04), B = "identity", error.distr = NULL, error.par = NULL){
 
   assert_intercept_present(mod = mod)
   assert_binary_categorical_X(mod = mod, X = X)
@@ -106,10 +86,49 @@ rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, e
   if(is.null(tau)) tau <- mod$tau
   if (any(!tau %in% mod$tau)) stop("All values in tau must be among the quantiles used in mod.")
 
+  # B is ignored when full = TRUE
+  if (isTRUE(full)) B <- "identity"
+
   res <- estimateCovariance(mod = mod, X = X, test = "rank", h = h, alpha = alpha)
   S <- res$S
   M <- res$M
   taus <- mod$tau
+
+
+  # validate user-provided matrix B once (only if user supplies a matrix)
+  if (is.matrix(B)) {
+
+    if (nrow(B) != ncol(B)) {
+      stop("Provided matrix 'B' must be square.", call. = FALSE)
+    }
+
+    if (nrow(B) != length(taus)) {
+      stop(
+        "Provided matrix 'B' must have dimension equal to the number of quantiles in mod$tau.",
+        call. = FALSE
+      )
+    }
+
+    # symmetry check
+    if (!isTRUE(all.equal(B, t(B), tolerance = 1e-10))) {
+      stop("Provided matrix 'B' must be symmetric.", call. = FALSE)
+    }
+
+    # full-rank / invertibility check (numerically stable)
+    if (rcond(B) < .Machine$double.eps) {
+      stop("Provided matrix 'B' must be full rank (numerically invertible).", call. = FALSE)
+    }
+
+    # positive definiteness check (no non-positive eigenvalues)
+    ev <- eigen(B, symmetric = TRUE, only.values = TRUE)$values
+    if (any(!is.finite(ev))) {
+      stop("Provided matrix 'B' has non-finite eigenvalues.", call. = FALSE)
+    }
+    if (any(ev <= 0)) {
+      stop("Provided matrix 'B' must be positive definite (all eigenvalues > 0).", call. = FALSE)
+    }
+  }
+
 
   tests <- unlist(lapply(1:length(taus),
                        combn,
@@ -117,58 +136,71 @@ rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, e
                        simplify = FALSE),
                 recursive = FALSE)
 
-  pval<-numeric(0)
-  tstat <- numeric(0)
+  pval  <- numeric(length(tests))
+  tstat <- numeric(length(tests))
+  set   <- character(length(tests))
+
 
   for (l in 1:length(tests)) {
-    this_set <- unlist(tests[l])
+    this_set <- unlist(tests[[l]])
     idx      <- which(taus %in% this_set)
 
     S_sub <- as.matrix(S[idx])
     M_sub <- as.matrix(M[idx, idx])
-    Sigma <- M_sub
-    k_l   <- length(this_set)
 
-    if (!is.null(error.distr)) {
-      Al <- .build_A_from_dist(
-        taus   = this_set,
+
+    if (identical(B, "identity")) {
+
+      tstat[l] <- sum(S_sub^2)
+      eigenvals <- eigen(M_sub, only.values = TRUE)$values
+
+    } else if (identical(B, "inverse diagonal")) {
+
+      tstat[l] <- sum((S_sub^2) * diag(1/M_sub))
+      eigenvals <- eigen(M_sub %*% diag(diag(M_sub)^(-1)), only.values = TRUE)$values
+
+    } else if (identical(B, "distribution")) {
+
+      if (is.null(error.distr)) {
+        stop("Please specify the error distribution in 'error.distr'.", call. = FALSE)
+      }
+
+      B_vec <- build_B_from_dist(
+        taus = this_set,
         error.distr = error.distr,
-        error.par  = error.par
+        error.par = error.par
       )
+
+      tstat[l] <- sum((S_sub / B_vec)^2)
+      eigenvals <- eigen(M_sub %*% (diag(B_vec^(-2))), only.values = TRUE)$values
+
+    } else if (is.matrix(B)) {
+
+      B_sub <- as.matrix(B[idx, idx, drop = FALSE])
+
+      tstat[l] <- t(S_sub) %*% solve(B_sub) %*% S_sub
+      eigenvals <- eigen(M_sub %*% solve(B_sub), only.values = TRUE)$values
 
     } else {
 
-      if (is.null(A)) {
-        Al <- diag(1, nrow = k_l, ncol = k_l)
-
-      } else if (is.numeric(A) && length(A) == 1) {
-
-        Al <- diag(A, nrow = k_l, ncol = k_l)
-
-      } else if (is.list(A)) {
-        check_dimensions_A(A[[l]], k = k_l)
-        Al <- A[[l]]
-
-      } else{
-        stop("Argument 'A' has unsupported type.", call. = FALSE)
-      }
+      stop("'B' must be one of 'identity', 'distribution', 'inverse diagonal' or a matrix.", call. = FALSE)
     }
 
 
+    if (any(Im(eigenvals) != 0)) {
+      warning("Some eigenvalues are complex; using their real parts.", call. = FALSE)
+    }
+    eigenvals <- Re(eigenvals)
+    eigenvals <- eigenvals[abs(eigenvals) > 1e-4]
 
-    ASigma   <- Al %*% Sigma
-    lambdas  <- svd(ASigma)$d
-    lambdas <- lambdas[abs(lambdas)>0.001]
-    tstat[l] <- sum(S_sub**2)
-
-    if (length(lambdas) == 1) {
-      pval[l] <- 1 - pgamma(tstat[l], shape = 1/2, scale = 2 * lambdas)
+    if (length(eigen) == 1) {
+      pval[l] <- 1 - pgamma(tstat[l], shape = 1/2, scale = 2 * eigenvals)
     } else {
-      pval[l] <- .pImhof(lams = lambdas, x = tstat[l], eps = eps)
+      pval[l] <- .pImhof(lams = eigenvals, x = tstat[l], eps = eps)
     }
   }
 
-  set = gsub(pattern = "c", replacement = "", x = paste0(tests))
+  set = paste(this_set, collapse=",")
 
   out <- data.frame(Quantiles.Set = set,
                     Statistic = tstat,

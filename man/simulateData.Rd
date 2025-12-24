@@ -22,7 +22,7 @@ The first column corresponds to \code{X}, the remaining columns to \code{Z1, Z2,
 \item{sigma.y}{Either a numeric scalar or a one-sided expression/string (e.g., \code{"0.3 * abs(X) + 0.1"})
 defining the scale of \code{y}.}
 
-\item{distribution}{Character. One of \code{"normal"}, \code{"t"}, or \code{"exponential"}.
+\item{distribution}{Character. One of \code{"normal"}, \code{"t"}, or \code{"skew-normal"}.
 This is the distribution of \code{y}.}
 
 \item{df}{Numeric scalar > 0. Degrees of freedom for t-distribution.}
@@ -40,9 +40,9 @@ the chosen distribution.
 \details{
 The response is generated as \code{y = mu + beta * X + Z \%*\% gamma + error}.
 The error term can be drawn from a normal distribution, scaled Student-t with \code{df} degrees of freedom,
-or a shifted exponential. Its standard deviation is defined by \code{sigma.y}:
+or a skew-normal. Its standard deviation is defined by \code{sigma.y}:
 if numeric, a fixed scale is used; if a character expression,
-the scale can vary with \code{X} and/or \code{Z}.
+the scale can vary with \code{X} and/or \code{Z1}.
 }
 \examples{
 set.seed(1)
@@ -56,9 +56,9 @@ dat_n <- simulateData(n = 200, beta = 0.5, gamma = c(0.2,-0.1),
 # Student-t
 dat_t0 <- simulateData(n = 200, beta = 0.5, gamma = c(0.2,-0.1),
                        sigma.y = 0.5, distribution = "t", df = 7)
-# Exponential
-dat_e <- simulateData(n = 200, beta = 0.5, gamma = c(0.2,-0.1),
-                      sigma.y = "0.3 * abs(X) + 0.1", distribution = "exponential")
+# Skew-normal
+dat_sn <- simulateData(n = 200, beta = 0.5, gamma = c(0.2,-0.1),
+                      sigma.y = "abs(Z1) + 1", distribution = "skew-normal")
 
 
 }

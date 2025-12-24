@@ -12,7 +12,7 @@
 #'   The first column corresponds to \code{X}, the remaining columns to \code{Z1, Z2, ...}.
 #' @param sigma.y Either a numeric scalar or a one-sided expression/string (e.g., \code{"0.3 * abs(X) + 0.1"})
 #'   defining the scale of \code{y}.
-#' @param distribution Character. One of \code{"normal"}, \code{"t"}, or \code{"exponential"}.
+#' @param distribution Character. One of \code{"normal"}, \code{"t"}, or \code{"skew-normal"}.
 #'   This is the distribution of \code{y}.
 #' @param df Numeric scalar > 0. Degrees of freedom for t-distribution.
 #' @param seed Numeric scalar > 0. Seed for random number generator.
@@ -23,9 +23,9 @@
 #' @details
 #' The response is generated as \code{y = mu + beta * X + Z \%*\% gamma + error}.
 #' The error term can be drawn from a normal distribution, scaled Student-t with \code{df} degrees of freedom,
-#' or a shifted exponential. Its standard deviation is defined by \code{sigma.y}:
+#' or a skew-normal. Its standard deviation is defined by \code{sigma.y}:
 #' if numeric, a fixed scale is used; if a character expression,
-#' the scale can vary with \code{X} and/or \code{Z}.
+#' the scale can vary with \code{X} and/or \code{Z1}.
 #'
 #' @examples
 #' set.seed(1)
@@ -39,13 +39,14 @@
 #' # Student-t
 #' dat_t0 <- simulateData(n = 200, beta = 0.5, gamma = c(0.2,-0.1),
 #'                        sigma.y = 0.5, distribution = "t", df = 7)
-#' # Exponential
-#' dat_e <- simulateData(n = 200, beta = 0.5, gamma = c(0.2,-0.1),
-#'                       sigma.y = "0.3 * abs(X) + 0.1", distribution = "exponential")
+#' # Skew-normal
+#' dat_sn <- simulateData(n = 200, beta = 0.5, gamma = c(0.2,-0.1),
+#'                       sigma.y = "abs(Z1) + 1", distribution = "skew-normal")
 #'
 #'
 #' @importFrom MASS mvrnorm
 #' @importFrom stats rnorm rexp rt
+#' @importFrom sn rsn
 #' @export
 
 simulateData <- function(n, beta = 0, gamma = 0, mu = 0, Sigma = NULL, sigma.y = 1,
@@ -65,7 +66,7 @@ simulateData <- function(n, beta = 0, gamma = 0, mu = 0, Sigma = NULL, sigma.y =
   if (!all(dim(Sigma) == p)) stop("Sigma dimensions must match length(gamma) + 1.")
   if (!isSymmetric(Sigma)) stop("`Sigma` must be symmetric.")
 
-  distribution <- match.arg(tolower(distribution), c("normal", "t", "exponential"))
+  distribution <- match.arg(tolower(distribution), c("normal", "t", "skew-normal"))
 
   if (is.numeric(sigma.y)) {
     if (any(sigma.y <= 0)) stop("All numeric values of sigma.y must be positive.")
@@ -102,10 +103,8 @@ simulateData <- function(n, beta = 0, gamma = 0, mu = 0, Sigma = NULL, sigma.y =
     y <- eta + sigma * sqrt((df-2)/df) * rt(n = n, df = df)
   }
 
-  if (distribution == "exponential") {
-    eta_clip <- pmin(pmax(eta, -30), 30)
-    rate <- 1 / (exp(eta_clip) * sigma)
-    y <- rexp(n, rate = rate) - 1/rate
+  if (distribution == "skew-normal") {
+    y <- rsn(n = n, xi=eta-1.453, omega = sigma+2, alpha=2.2)
   }
 
   out <- as.data.frame(cbind(y, XZ))

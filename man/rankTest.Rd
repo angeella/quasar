@@ -5,7 +5,7 @@
 \title{Rank-score test for quantile regression}
 \usage{
 rankTest(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05,
-eps = c(1e-04,1e-04), A = NULL, error.distr = NULL, error.par = NULL)
+eps = c(1e-04,1e-04), B = "identity", error.distr = NULL, error.par = NULL)
 }
 \arguments{
 \item{mod}{An object of class \code{rqs} returned by
@@ -29,46 +29,21 @@ Following Koenker (2005), it is typically set equal to the desired significance 
 \item{eps}{2d vector of relative accuracies requested for approximate the distribution of the test statistic
 by Imhof (1961) "Computing the Distribution of Quadratic Forms in Normal Variables"}
 
-\item{A}{Optional weighting matrix (or a list of matrices) used in the
-computation of the test statistic.
+\item{B}{Weight specification used in the computation of the test statistic.
+One of \code{"identity"} (default), \code{"distribution"}, or \code{"inverse diagonal"}.
+Alternatively, the user can supply a numeric matrix of dimension
+\code{length(mod$tau) x length(mod$tau)}. This argument is ignored when \code{full = TRUE}.}
 
-If \code{NULL} (default), the identity matrix is used for each intersection
-hypothesis.
+\item{error.distr}{A character string specifying the assumed distribution of the
+regression errors, used only when \code{B = "distribution"}.
+Allowed values are \code{"normal"}, \code{"skew-normal"}, \code{"t"}.}
 
-If a single numeric value is supplied, it is interpreted as a scalar and the
-weighting matrix is set to \eqn{A = c I_k}.
-
-If a list is provided, it must contain one matrix for each tested intersection
-hypothesis, and each matrix must be square with dimension equal to the size
-of the corresponding quantile subset.
-
-This argument is ignored when \code{error.distr} is specified.}
-
-\item{error.distr}{A character string specifying the assumed distribution of
-the regression errors, used to construct the weighting matrix \eqn{A} based on
-the reciprocal of the error density evaluated at the relevant quantile levels.
-
-Allowed values are:
-\itemize{
-  \item \code{NULL}: default, no distributional assumption; the argument \code{A} is used instead.
-  \item \code{"normal"}: normal errors with parameters specified in \code{error.par}.
-  \item \code{"exponential"}: exponential errors with rate/scale specified in \code{error.par}.
-  \item \code{"t"}: Student-\eqn{t} errors with degrees of freedom specified in \code{error.par}.
-}
-
-When \code{error.distr} is not \code{NULL}, the argument \code{A} is ignored and the
-matrix \eqn{A} is automatically set to a diagonal matrix with entries
-\eqn{1 / f(F^{-1}(\tau_j))}, where \eqn{f} is the density of the specified
-error distribution and \eqn{F^{-1}} its quantile function.}
-
-\item{error.par}{A named list of parameters associated with the distribution
-specified in \code{error.distr}.
-
+\item{error.par}{A named list of parameters associated with \code{error.distr}.
 Required elements depend on the chosen distribution:
 \itemize{
-  \item For \code{"normal"}: \code{mean} (default 0), \code{sd} (default 1).
-  \item For \code{"exponential"}: either \code{rate} or \code{scale} (default \code{rate = 1}).
-  \item For \code{"t"}: \code{df} (degrees of freedom, required).
+  \item For \code{"normal"}: \code{mean}, \code{sd}.
+  \item For \code{"skew-normal"}: \code{xi}, \code{omega}, \code{alpha}, \code{tau}.
+  \item For \code{"t"}: \code{df}.
 }}
 }
 \value{
@@ -90,6 +65,10 @@ Testing equality to a non-zero value is not yet implemented.
 This procedure requires that the covariate of interest \code{X} is either numeric
 or, if categorical, has at most two levels. Multilevel categorical covariates
 are not supported and will trigger an error.
+
+If \code{full = TRUE}, \code{B} is ignored and the identity weight is used.
+If \code{B} is user-defined (a matrix), it must be square, symmetric, positive
+definite, and numerically invertible.
 }
 \examples{
 set.seed(1234)
@@ -104,6 +83,9 @@ rankTest(mod, X = "X")
 }
 \references{
 Koenker, R. (2005). \emph{Quantile Regression}. Cambridge University Press.
+
+Imhof, J.P. (1961). Computing the Distribution of Quadratic Forms in Normal Variables.
+\emph{Biometrika}, 48(3/4), 419--426.
 }
 \seealso{
 \code{\link[quantreg]{rq}}, \code{\link[quasar]{waldTest}}

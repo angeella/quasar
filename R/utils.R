@@ -87,86 +87,103 @@ assert_binary_categorical_X <- function(mod, X) {
 
 }
 
-#' Assert that the matrix A used in the Imhof approximation has
-#' valid dimensions at intersection level
-#'
-#' @param A The matrix A
-#' @param k number of tests
-#' @keywords internal
-check_dimensions_A <- function(A, k) {
 
-  # UNIVARIATE CASE: A is a vector of length 1
-  if (is.vector(A) && length(A) == 1) {
-    return(invisible(TRUE))
+
+
+#' Compute weights from error densities
+#'
+#' @param taus Numeric vector of quantile levels in (0,1).
+#' @param error.distr Character. One of "normal", "skew-normal", "t".
+#' @param error.par List of parameters for the chosen distribution.
+#'
+#' @keywords internal
+#' @importFrom stats qnorm dnorm qt dt
+#' @importFrom sn qsn dsn
+build_B_from_dist <- function(taus, error.distr, error.par = list()) {
+  error.distr <- match.arg(error.distr, c("normal", "skew-normal", "t"))
+
+  # --- checks on taus ---
+  if (!is.numeric(taus) || length(taus) == 0L) {
+    stop("'taus' must be a non-empty numeric vector.", call. = FALSE)
+  }
+  if (anyNA(taus)) {
+    stop("'taus' cannot contain NA values.", call. = FALSE)
+  }
+  if (any(taus <= 0 | taus >= 1)) {
+    stop("'taus' must contain values strictly between 0 and 1.", call. = FALSE)
   }
 
-  # MULTIVARIATE CASE: A must be an k × k matrix
-  if (is.matrix(A)) {
-    if (nrow(A) == k && ncol(A) == k) {
-      return(invisible(TRUE))
-    } else {
-      stop(sprintf(
-        "A is a matrix but not %dx%d (it is %dx%d). Please insert a correct list of matrices A",
-        k, k, nrow(A), ncol(A)
-      ), call. = FALSE)
-    }
-  }
-
-  stop("Please insert a correct list of matrices A", call. = FALSE)
-}
-
-
-#' Compute the matrix A from  error densities
-#'
-#' @param taus The level of the quantiles
-#' @param error.distr The distribution of the error terms (normal, exponential and t)
-#' @param error.par The related parameters of the specified distribution
-#' @keywords internal
-#' @importFrom stats qnorm dnorm
-#' @importFrom stats qexp dexp qt dt
-
-.build_A_from_dist <- function(taus, error.distr, error.par) {
-  error.distr <- match.arg(error.distr, c("normal", "exponential", "t"))
+  q_vals <- NULL
+  f_vals <- NULL
 
   if (error.distr == "normal") {
-    mean <- if (!is.null(error.par$mean)) error.par$mean else 0
-    sd   <- if (!is.null(error.par$sd))   error.par$sd   else 1
-
-    q_vals <- qnorm(taus, mean = mean, sd = sd)
-    f_vals <- dnorm(q_vals, mean = mean, sd = sd)
-
-  } else if (error.distr == "exponential") {
-    if (!is.null(error.par$rate) && !is.null(error.par$scale)) {
-      stop("Provide either 'rate' or 'scale', not both, in error.par.", call. = FALSE)
+    needed <- c("mean", "sd")
+    missing <- needed[!needed %in% names(error.par)]
+    if (length(missing) > 0L) {
+      stop(
+        sprintf("For 'normal' errors you must provide: %s.", paste(missing, collapse = ", ")),
+        call. = FALSE
+      )
     }
 
-    if (!is.null(error.par$rate)) {
-      rate <- error.par$rate
-    } else if (!is.null(error.par$scale)) {
-      rate <- 1 / error.par$scale
-    } else {
-      rate <- 1  # default: Exp(rate = 1)
+    mu <- error.par$mean
+    sigma <- error.par$sd
+
+    if (!is.numeric(mu) || length(mu) != 1L || is.na(mu)) {
+      stop("'error.par$mean' must be a single numeric value.", call. = FALSE)
+    }
+    if (!is.numeric(sigma) || length(sigma) != 1L || is.na(sigma) || sigma <= 0) {
+      stop("'error.par$sd' must be a single positive numeric value.", call. = FALSE)
     }
 
-    q_vals <- qexp(taus, rate = rate)
-    f_vals <- dexp(q_vals, rate = rate)
+    q_vals <- stats::qnorm(taus, mean = mu, sd = sigma)
+    f_vals <- stats::dnorm(q_vals, mean = mu, sd = sigma)
 
-  } else if (error.distr == "t") {
+  } else if (error.distr == "skew-normal") {
+    needed <- c("xi", "omega", "alpha", "tau")
+    missing <- needed[!needed %in% names(error.par)]
+    if (length(missing) > 0L) {
+      stop(
+        sprintf("For 'skew-normal' errors you must provide: %s.", paste(missing, collapse = ", ")),
+        call. = FALSE
+      )
+    }
+
+    xi    <- error.par$xi
+    omega <- error.par$omega
+    alpha <- error.par$alpha
+    tau0  <- error.par$tau
+
+    if (!is.numeric(omega) || length(omega) != 1L || is.na(omega) || omega <= 0) {
+      stop("'error.par$omega' must be a single positive numeric value.", call. = FALSE)
+    }
+
+    q_vals <- sn::qsn(p = taus, xi = xi, omega = omega, alpha = alpha, tau = tau0)
+    f_vals <- sn::dsn(x = q_vals, xi = xi, omega = omega, alpha = alpha, tau = tau0)
+
+  } else { # error.distr == "t"
     if (is.null(error.par$df)) {
       stop("For 't' errors, you must provide 'df' in error.par.", call. = FALSE)
     }
-    df <- error.par$df
 
-    q_vals <- qt(taus, df = df)
-    f_vals <- dt(q_vals, df = df)
+    df <- error.par$df
+    if (!is.numeric(df) || length(df) != 1L || is.na(df) || df <= 0) {
+      stop("'error.par$df' must be a single positive numeric value.", call. = FALSE)
+    }
+
+    q_vals <- stats::qt(taus, df = df)
+    f_vals <- stats::dt(q_vals, df = df)
   }
 
+  if (any(!is.finite(f_vals))) {
+    stop("Some densities are not finite. Check parameters and taus.", call. = FALSE)
+  }
   if (any(f_vals <= 0)) {
     stop("All resulting densities must be positive.", call. = FALSE)
   }
 
-  A  <- diag(1 / f_vals, nrow = length(taus), ncol = length(taus))
-  return(A)
+  B <- (1 + f_vals)
+  return(B)
 }
 
 
