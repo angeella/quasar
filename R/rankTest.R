@@ -86,8 +86,6 @@ rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, e
   if(is.null(tau)) tau <- mod$tau
   if (any(!tau %in% mod$tau)) stop("All values in tau must be among the quantiles used in mod.")
 
-  # B is ignored when full = TRUE
-  if (isTRUE(full)) B <- "identity"
 
   res <- estimateCovariance(mod = mod, X = X, test = "rank", h = h, alpha = alpha)
   S <- res$S
@@ -157,7 +155,7 @@ rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, e
     } else if (identical(B, "inverse diagonal")) {
 
       tstat[l] <- sum((S_sub^2) * diag(1/M_sub))
-      eigenvals <- eigen(M_sub %*% diag(diag(M_sub)^(-1)), only.values = TRUE)$values
+      eigenvals <- eigen(M_sub %*% diag(diag(M_sub)**(-1), nrow = nrow(M_sub)), only.values = TRUE)$values
 
     } else if (identical(B, "distribution")) {
 
@@ -172,7 +170,7 @@ rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, e
       )
 
       tstat[l] <- sum((S_sub / B_vec)^2)
-      eigenvals <- eigen(M_sub %*% (diag(B_vec^(-2))), only.values = TRUE)$values
+      eigenvals <- eigen(M_sub %*% (diag(B_vec^(-2), nrow = length(B_vec))), only.values = TRUE)$values
 
     } else if (is.matrix(B)) {
 
