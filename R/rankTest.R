@@ -140,7 +140,7 @@ rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, e
 
 
   for (l in 1:length(tests)) {
-    this_set <- unlist(tests[[l]])
+    this_set <- unlist(tests[l])
     idx      <- which(taus %in% this_set)
 
     S_sub <- as.matrix(S[idx])
@@ -198,7 +198,7 @@ rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, e
     }
   }
 
-  set = paste(this_set, collapse=",")
+  set = gsub(pattern = "c", replacement = "", x = paste0(tests))
 
   out <- data.frame(Quantiles.Set = set,
                     Statistic = tstat,
