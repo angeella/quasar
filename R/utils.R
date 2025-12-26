@@ -140,7 +140,7 @@ build_B_from_dist <- function(taus, error.distr, error.par = list()) {
     f_vals <- stats::dnorm(q_vals, mean = mu, sd = sigma)
 
   } else if (error.distr == "skew-normal") {
-    needed <- c("xi", "omega", "alpha", "tau")
+    needed <- c("xi", "omega", "alpha")
     missing <- needed[!needed %in% names(error.par)]
     if (length(missing) > 0L) {
       stop(
@@ -152,14 +152,13 @@ build_B_from_dist <- function(taus, error.distr, error.par = list()) {
     xi    <- error.par$xi
     omega <- error.par$omega
     alpha <- error.par$alpha
-    tau0  <- error.par$tau
 
     if (!is.numeric(omega) || length(omega) != 1L || is.na(omega) || omega <= 0) {
       stop("'error.par$omega' must be a single positive numeric value.", call. = FALSE)
     }
 
-    q_vals <- sn::qsn(p = taus, xi = xi, omega = omega, alpha = alpha, tau = tau0)
-    f_vals <- sn::dsn(x = q_vals, xi = xi, omega = omega, alpha = alpha, tau = tau0)
+    q_vals <- sn::qsn(p = taus, xi = xi, omega = omega, alpha = alpha)
+    f_vals <- sn::dsn(x = q_vals, xi = xi, omega = omega, alpha = alpha)
 
   } else { # error.distr == "t"
     if (is.null(error.par$df)) {

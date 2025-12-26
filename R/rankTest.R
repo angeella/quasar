@@ -34,7 +34,7 @@
 #'   Required elements depend on the chosen distribution:
 #'   \itemize{
 #'     \item For \code{"normal"}: \code{mean}, \code{sd}.
-#'     \item For \code{"skew-normal"}: \code{xi}, \code{omega}, \code{alpha}, \code{tau}.
+#'     \item For \code{"skew-normal"}: \code{xi}, \code{omega}, \code{alpha}.
 #'     \item For \code{"t"}: \code{df}.
 #'   }
 #'
