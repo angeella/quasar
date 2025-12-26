@@ -30,7 +30,7 @@ Following Koenker (2005), it is typically set equal to the desired significance 
 by Imhof (1961) "Computing the Distribution of Quadratic Forms in Normal Variables"}
 
 \item{B}{Weight specification used in the computation of the test statistic.
-One of \code{"identity"} (default), \code{"distribution"}, or \code{"inverse diagonal"}.
+One of \code{"identity"} (default), \code{"distribution"}, \code{"inverse diagonal"}, or \code{"inverse variance"} (not recommended).
 Alternatively, the user can supply a numeric matrix of dimension
 \code{length(mod$tau) x length(mod$tau)}. This argument is ignored when \code{full = TRUE}.}
 

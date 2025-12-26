@@ -24,7 +24,7 @@
 #' @param eps 2d vector of relative accuracies requested for approximate the distribution of the test statistic
 #' by Imhof (1961) "Computing the Distribution of Quadratic Forms in Normal Variables"
 #' @param B Weight specification used in the computation of the test statistic.
-#'   One of \code{"identity"} (default), \code{"distribution"}, or \code{"inverse diagonal"}.
+#'   One of \code{"identity"} (default), \code{"distribution"}, \code{"inverse diagonal"}, or \code{"inverse variance"} (not recommended).
 #'   Alternatively, the user can supply a numeric matrix of dimension
 #'   \code{length(mod$tau) x length(mod$tau)}. This argument is ignored when \code{full = TRUE}.
 #' @param error.distr A character string specifying the assumed distribution of the
@@ -147,6 +147,7 @@ rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, e
     M_sub <- as.matrix(M[idx, idx])
 
 
+    if(B != "inverse variance"){
     if (identical(B, "identity")) {
 
       tstat[l] <- sum(S_sub**2)
@@ -196,8 +197,12 @@ rankTest <- function(mod, X, tau = NULL, full = FALSE, h = NULL, alpha = 0.05, e
     } else {
       pval[l] <- .pImhof(lams = eigenvals, x = tstat[l], eps = eps)
     }
-  }
+  } else{
+    tstat[l] <- (t(S_sub)%*%solve(M_sub)%*%S_sub)
 
+    pval[l] <- 1-pchisq(tstat[l],df = length(S_sub))
+  }
+  }
   set = gsub(pattern = "c", replacement = "", x = paste0(tests))
 
   out <- data.frame(Quantiles.Set = set,
