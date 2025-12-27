@@ -17,7 +17,7 @@
 #'   This is the distribution of \code{y}.
 #' @param df Numeric scalar > 0. Degrees of freedom for t-distribution.
 #' @param xi Numeric scalar. Location parameter for the skew-normal distribution. In particular, this will be
-#' \code{mu + beta * X + Z \%*\% gamma} - \code{xi}. Default 1.453.
+#' \code{mu + beta * X + Z \%*\% gamma} + \code{xi}. Default -1.453.
 #' @param omega Numeric scalar > 0. Scale parameter for the skew-normal distribution. In particular, this will be
 #' \code{sigma.y} + \code{omega}. Default 2.
 #' @param alpha Numeric scalar. Slant parameter for the skew-normal distribution. Default 2.2.
@@ -56,7 +56,7 @@
 #' @export
 
 simulateData <- function(n, beta = 0, gamma = 0, mu = 0, Sigma = NULL, sigma.y = 1,
-                         distribution = "normal", df = 5, xi = 1.453, omega = 2, alpha = 2.2,
+                         distribution = "normal", df = 5, xi = -1.453, omega = 2, alpha = 2.2,
                          seed = NULL) {
 
 
@@ -113,7 +113,7 @@ simulateData <- function(n, beta = 0, gamma = 0, mu = 0, Sigma = NULL, sigma.y =
   }
 
   if (distribution == "skew-normal") {
-    y <- rsn(n = n, xi=eta-xi, omega = sigma+omega, alpha=alpha)
+    y <- rsn(n = n, xi=eta+xi, omega = sigma+omega, alpha=alpha)
   }
 
   out <- as.data.frame(cbind(y, XZ))
