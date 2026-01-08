@@ -2,7 +2,6 @@
 # setwd(...)
 
 library(quasar)
-library(quantreg)
 
 # =========================
 # Type I error control (Figure 2)
