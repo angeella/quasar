@@ -6,7 +6,7 @@
 \usage{
 simulateData(n, beta = 0, gamma = 0, mu = 0, Sigma = NULL,
              sigma.y = 1, distribution = "normal", df = 5,
-             xi = 1.453, omega = 2, alpha = 2.2, seed = NULL)
+             xi = -1.453, omega = 2, alpha = 2.2, seed = NULL)
 }
 \arguments{
 \item{n}{Integer. Number of observations.}
@@ -29,7 +29,7 @@ This is the distribution of \code{y}.}
 \item{df}{Numeric scalar > 0. Degrees of freedom for t-distribution.}
 
 \item{xi}{Numeric scalar. Location parameter for the skew-normal distribution. In particular, this will be
-\code{mu + beta * X + Z \%*\% gamma} - \code{xi}. Default 1.453.}
+\code{mu + X * beta + Z \%*\% gamma} + \code{xi}. Default -1.453.}
 
 \item{omega}{Numeric scalar > 0. Scale parameter for the skew-normal distribution. In particular, this will be
 \code{sigma.y} + \code{omega}. Default 2.}
@@ -47,7 +47,7 @@ a vector of additional covariates \code{Z}, and a response \code{y} drawn from
 the chosen distribution.
 }
 \details{
-The response is generated as \code{y = mu + beta * X + Z \%*\% gamma + error}.
+The response is generated as \code{y = mu + X * beta + Z \%*\% gamma + error}.
 The error term can be drawn from a normal distribution, scaled Student-t with \code{df} degrees of freedom,
 or a skew-normal. Its standard deviation is defined by \code{sigma.y}:
 if numeric, a fixed scale is used; if a character expression,

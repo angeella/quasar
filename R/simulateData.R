@@ -4,7 +4,7 @@
 #' the chosen distribution.
 #' @usage simulateData(n, beta = 0, gamma = 0, mu = 0, Sigma = NULL,
 #'              sigma.y = 1, distribution = "normal", df = 5,
-#'              xi = 1.453, omega = 2, alpha = 2.2, seed = NULL)
+#'              xi = -1.453, omega = 2, alpha = 2.2, seed = NULL)
 #' @param n Integer. Number of observations.
 #' @param beta Numeric scalar. Effect of \code{X}.
 #' @param gamma Numeric vector. Effects of \code{Z} (length \code{p - 1}, where \code{p = ncol(Sigma)}).
@@ -17,7 +17,7 @@
 #'   This is the distribution of \code{y}.
 #' @param df Numeric scalar > 0. Degrees of freedom for t-distribution.
 #' @param xi Numeric scalar. Location parameter for the skew-normal distribution. In particular, this will be
-#' \code{mu + beta * X + Z \%*\% gamma} + \code{xi}. Default -1.453.
+#' \code{mu + X * beta + Z \%*\% gamma} + \code{xi}. Default -1.453.
 #' @param omega Numeric scalar > 0. Scale parameter for the skew-normal distribution. In particular, this will be
 #' \code{sigma.y} + \code{omega}. Default 2.
 #' @param alpha Numeric scalar. Slant parameter for the skew-normal distribution. Default 2.2.
@@ -27,7 +27,7 @@
 #' A \code{data.frame} with columns \code{y}, \code{X}, and \code{Z1, ..., Zk}.
 #'
 #' @details
-#' The response is generated as \code{y = mu + beta * X + Z \%*\% gamma + error}.
+#' The response is generated as \code{y = mu + X * beta + Z \%*\% gamma + error}.
 #' The error term can be drawn from a normal distribution, scaled Student-t with \code{df} degrees of freedom,
 #' or a skew-normal. Its standard deviation is defined by \code{sigma.y}:
 #' if numeric, a fixed scale is used; if a character expression,

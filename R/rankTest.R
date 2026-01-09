@@ -18,11 +18,18 @@
 #' and corresponding \eqn{p}-values for all intersection hypotheses containing
 #' \code{tau}. If \code{FALSE} (default), only the results for the single hypotheses
 #' are returned.
-#' @param h A numeric value for the bandwidth.
+#' @param h Character string specifying the bandwidth selection method for
+#' sparsity estimation. One of \code{"Hall-Sheather"} or \code{"Bofinger"}.
+#' The default, \code{NULL}, uses the Hall-Sheather (1988) rule.
 #' @param alpha A numeric value used for bandwidth estimation.
 #' Following Koenker (2005), it is typically set equal to the desired significance level.
-#' @param eps 2d vector of relative accuracies requested for approximate the distribution of the test statistic
-#' by Imhof (1961) "Computing the Distribution of Quadratic Forms in Normal Variables"
+#' @param eps Numeric vector of length 2 specifying the relative accuracies
+#'   requested for approximating the distribution of the test statistic using
+#'   Imhof's (1961) method, "Computing the Distribution of Quadratic Forms in
+#'   Normal Variables". The first component controls the accuracy of the initial
+#'   (more accurate) numerical integration (using \code{\link[stats]{integrate}}),
+#'   while the second component controls the accuracy of a subsequent, less
+#'   accurate integration step (using \code{\link[pracma]{quadgk}}).
 #' @param B Weight specification used in the computation of the test statistic.
 #'   One of \code{"identity"} (default), \code{"distribution"}, \code{"inverse diagonal"}, or \code{"inverse variance"} (not recommended).
 #'   Alternatively, the user can supply a numeric matrix of dimension
@@ -43,7 +50,7 @@
 #' \itemize{
 #'   \item \code{Quantiles.Set}: quantile levels
 #'   \item \code{Statistic}: rank-score test statistic
-#'   \item \code{p.value}: corresponding unadjusted \eqn{p}-value
+#'   \item \code{p.value}: corresponding test-specific (unadjusted) \eqn{p}-value
 #' }
 #'
 #' @author Angela Andreella
@@ -51,8 +58,12 @@
 #' @references
 #' Koenker, R. (2005). \emph{Quantile Regression}. Cambridge University Press.
 #'
-#' Imhof, J.P. (1961). Computing the Distribution of Quadratic Forms in Normal Variables.
-#' \emph{Biometrika}, 48(3/4), 419--426.
+#' Imhof, J. P. (1961). Computing the distribution of quadratic forms in normal
+#' variables. \emph{Biometrika}, 48(3--4), 419--426.
+#'
+#' De Santis, R., Veselý, A., and Andreella, A. (2026). Inference on multiple
+#' quantiles in regression models by a rank-score approach.
+#' \emph{arXiv preprint} <doi:10.48550/arXiv.2511.07999>.
 #'
 #' @details
 #' This procedure requires that the covariate of interest \code{X} is either numeric
