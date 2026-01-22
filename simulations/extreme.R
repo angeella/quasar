@@ -23,24 +23,25 @@ sigma_y_specs <- c("1", "1+abs(X)", "1+abs(Z1)")
 beta_grid     <- c(0.2, 0.4, 0.6, 0.8, 1.2)
 gamma_grid    <- c(0.5)
 
-# Weighting matrices for the generalized rank-score test inside closed testing
-B_specs <- c("identity", "inverse diagonal", "distribution")
 
 # Parameters used when B = "distribution" (density-based weighting).
 # Keep in one place for transparency / reproducibility.
 # NOTE: these parameters are passed to quasar via `error.par`.
-error_par <- list(mean = 0, sd = 1, df = 5, xi = -1.453, omega = 2, alpha = 2.2)
+parameters_list <- list(mean = 0, sd = 1, df = 5, xi = -1.453, omega = 2, alpha = 2.2)
 
-# Simulation design
 sim <- expand.grid(
-  sim           = seq_len(nsim),
-  distribution  = distributions,
-  sigma_y       = sigma_y_specs,
-  beta          = beta_grid,
-  gamma         = gamma_grid,
-  B             = B_specs,
+  sim            = seq(nsim),
+  distributions  = distributions,
+  sigma.y        = sigma.y,
+  beta           = beta,
+  gamma          = gamma,
   stringsAsFactors = FALSE
 )
+# We create three copies of the same design grid because we will store results
+# for three different B choices in separate data.frames.
+sim1 <- sim
+sim2 <- sim
+
 
 # -------------------------
 # Pre-allocate output columns
@@ -51,69 +52,115 @@ sim <- expand.grid(
 # - pvB*: Bonferroni adjustment of raw p-values
 #
 
-init_cols <- function(prefix) {
-  sim[[paste0(prefix, "1")]] <- NA_real_
-  sim[[paste0(prefix, "2")]] <- NA_real_
-  sim[[paste0(prefix, "3")]] <- NA_real_
-}
+# For each run we store p-values for the 3 individual quantile hypotheses
+# (one per tau):
+#   pvC*  : closed testing adjusted p-values
+#   pvRH* : Holm adjustment applied to the raw p-values
+#   pvRB* : Bonferroni adjustment applied to the raw p-values
+#
+# The suffix 1,2,3 corresponds to tau = 0.05, 0.10, 0.15, respectively.
+sim$pvC1  <- sim$pvC2  <- sim$pvC3  <- NA_real_
+sim$pvRH1 <- sim$pvRH2 <- sim$pvRH3 <- NA_real_
+sim$pvRB1 <- sim$pvRB2 <- sim$pvRB3 <- NA_real_
 
-init_cols("pvC")
-init_cols("pvH")
-init_cols("pvB")
+sim1$pvC1  <- sim1$pvC2  <- sim1$pvC3  <- NA_real_
+sim1$pvRH1 <- sim1$pvRH2 <- sim1$pvRH3 <- NA_real_
+sim1$pvRB1 <- sim1$pvRB2 <- sim1$pvRB3 <- NA_real_
 
+sim2$pvC1  <- sim2$pvC2  <- sim2$pvC3  <- NA_real_
+sim2$pvRH1 <- sim2$pvRH2 <- sim2$pvRH3 <- NA_real_
+sim2$pvRB1 <- sim2$pvRB2 <- sim2$pvRB3 <- NA_real_
 
 # Main loop
 
-for (i in seq_len(nrow(sim))) {
+for (i in seq(nrow(sim))) {
 
   # -----------------------
-  # 1) Simulate data
+  # a) Simulate data
   # -----------------------
   dat <- simulateData(
-    n            = n,
+    100,
     beta         = sim$beta[i],
     gamma        = sim$gamma[i],
     mu           = 0.5,
     Sigma        = Sigma,
-    sigma.y      = sim$sigma_y[i],
-    distribution = sim$distribution[i],
-    # distribution-specific parameters (safe to pass even if unused)
+    sigma.y      = sim$sigma.y[i],
+    distribution = sim$distributions[i],
     df           = 5,
+    seed         = i,
     xi           = -1.453,
     omega        = 2,
-    alpha        = 2.2,
-    seed         = i
+    alpha        = 2.2
   )
 
   # -----------------------
-  # 2) Fit quantile regression at extreme taus
+  # b) Fit quantile regression at extreme taus
   # -----------------------
   mod <- rq(y ~ X + Z1, tau = tau, data = dat)
 
-  # -----------------------
-  # 3) Closed testing: generalized rank-score test with chosen B
-  # -----------------------
-  # When B = "distribution", quasar uses error.distr + error.par to build weights.
+  # =====================================================================
+  # (c1) Closed testing with B = "identity"
+  # =====================================================================
+  # closedTesting returns:
+  #   - out$p.value           : raw marginal p-values for each tau
+  #   - out$p.value.adjusted  : closed testing adjusted p-values (strong FWER)
   out <- closedTesting(
     mod,
-    X          = "X",
-    tau        = tau,
-    test       = "rank-score",
-    B          = sim$B[i],
-    error.distr= sim$distribution[i],
-    error.par  = error_par
+    X           = "X",
+    tau         = tau,
+    test        = "rank-score",
+    B           = "identity",
+    error.distr = sim$distributions[i],
+    error.par   = parameters_list
   )
 
-  # -----------------------
-  # 4) Store results
-  # -----------------------
-  # Closed testing adjusted p-values
+  # Store closed testing adjusted p-values
   sim[i, c("pvC1", "pvC2", "pvC3")] <- out$p.value.adjusted
 
-  # Holm and Bonferroni based on raw p-values for the 3 individual hypotheses
-  sim[i, c("pvH1", "pvH2", "pvH3")] <- p.adjust(out$p.value, method = "holm")
-  sim[i, c("pvB1", "pvB2", "pvB3")] <- pmin(out$p.value * length(tau), 1)
+  # Store Holm adjustment on the 3 raw p-values
+  sim[i, c("pvRH1", "pvRH2", "pvRH3")] <- p.adjust(out$p.value, method = "holm")
 
+  # Store Bonferroni adjustment on the 3 raw p-values
+  sim[i, c("pvRB1", "pvRB2", "pvRB3")] <- pmin(out$p.value * 3, 1)
+
+  # =====================================================================
+  # (c2) Closed testing with B = "inverse diagonal"
+  # =====================================================================
+  out <- closedTesting(
+    mod,
+    X           = "X",
+    tau         = tau,
+    test        = "rank-score",
+    B           = "inverse diagonal",
+    error.distr = sim$distributions[i],
+    error.par   = parameters_list
+  )
+
+  sim1[i, c("pvC1", "pvC2", "pvC3")] <- out$p.value.adjusted
+  sim1[i, c("pvRH1", "pvRH2", "pvRH3")] <- p.adjust(out$p.value, method = "holm")
+  sim1[i, c("pvRB1", "pvRB2", "pvRB3")] <- pmin(out$p.value * 3, 1)
+
+  # =====================================================================
+  # (c3) Closed testing with B = "distribution"
+  # =====================================================================
+  out <- closedTesting(
+    mod,
+    X           = "X",
+    tau         = tau,
+    test        = "rank-score",
+    B           = "distribution",
+    error.distr = sim$distributions[i],
+    error.par   = parameters_list
+  )
+
+  sim2[i, c("pvC1", "pvC2", "pvC3")] <- out$p.value.adjusted
+  sim2[i, c("pvRH1", "pvRH2", "pvRH3")] <- p.adjust(out$p.value, method = "holm")
+  sim2[i, c("pvRB1", "pvRB2", "pvRB3")] <- pmin(out$p.value * 3, 1)
 }
 
 
+sim$B <- "identity"
+sim1$B <- "inverse diagonal"
+sim2$B <- "distribution"
+
+sim <- rbind(sim, sim1, sim2)
