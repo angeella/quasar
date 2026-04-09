@@ -1,8 +1,6 @@
 ## Resubmission
 
-This is a resubmission. I have added a
-generalized multivariate rank score test that improves power against alternatives
-in selected directions using a weighting matrix.
+This is a resubmission. I solved some minor bugs.
 
 ## Test environments
 

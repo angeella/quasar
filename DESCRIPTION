@@ -1,8 +1,8 @@
 Package: quasar
 Type: Package
 Title: Valid Inference on Multiple Quantile Regressions
-Version: 0.2.0
-Date: 2026-01-09
+Version: 0.2.1
+Date: 2026-04-09
 Authors@R: c(
     person(
       "Angela", "Andreella",
