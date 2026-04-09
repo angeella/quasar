@@ -3,9 +3,9 @@
 
 library(quasar)
 
-# =========================
+# ===============================================
 # Simulation Study: Extreme quantiles (Figure 4 )
-# =========================
+# ===============================================
 # This script reproduces the simulation study focusing on extreme quantile levels
 # tau = {0.05, 0.10, 0.15}, comparing closed testing versus Holm and Bonferroni,
 # and evaluating different weighting matrices B under several DGPs.
